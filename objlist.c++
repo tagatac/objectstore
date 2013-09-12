@@ -12,6 +12,8 @@ int main(int argc, char *argv[])
 		cerr << "Usage: " << argv[0] << " -u username [-l]" << endl;
 		return 1;
 	}
+	bool metadata = false;
+	if (argc >= 4 && (string) argv[3] == "-l") metadata = true;
 
 	fs::path userpath = fs::current_path();
 	userpath /= "data";
@@ -32,8 +34,12 @@ int main(int argc, char *argv[])
 		fs::directory_iterator end_iter;
 		for (fs::directory_iterator dir_itr(userpath);
 		     dir_itr != end_iter; ++dir_itr)
-			cout << '(' << fs::file_size(dir_itr->path()) << "B) "
-			     << dir_itr->path().filename().string() << endl;
+		{
+			if (metadata)
+				cout << '(' << fs::file_size(dir_itr->path())
+				     << "B) ";
+			cout << dir_itr->path().filename().string() << endl;
+		}
 	}
 
 	return 0;
