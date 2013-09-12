@@ -1,13 +1,14 @@
-executables = objput objget objlist
+#executables = objput objget objlist
+executables = objput
 
 all : $(executables)
 
-objput : objput.c
-	cc -o $@ objput.c
+objput : objput.c++
+	c++ -o $@ objput.c++
 objget : objget.c
-	cc -o $@ objget.c
+	c++ -o $@ objget.c
 objlist : objlist.c
-	cc -o $@ objlist.c
+	c++ -o $@ objlist.c
 
 .PHONY : clean
 clean :
