@@ -13,15 +13,14 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	string contents, objdir;
+	string line, objdir;
 	ofstream object;
 
 	cout << "Please enter file content:" << endl;
-	getline(cin, contents);
 	objdir = "data/" + (string) argv[2];
 	boost::filesystem::create_directories(objdir);
 	object.open((objdir + '/' + (string) argv[3]).c_str());
-	object << contents;
+	while (getline(cin, line)) object << line << endl;
 	object.close();
 
 	return 0;
