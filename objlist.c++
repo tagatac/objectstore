@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	userpath /= "data";
 	userpath /= argv[2];
 
-	/* Code for directory listing mostly taken from
+	/* Code for iterating through the directory contents mostly taken from
 	 * http://www.boost.org/doc/libs/1_54_0/libs/filesystem/example/simple_ls.cpp
 	 */
 
@@ -30,8 +30,10 @@ int main(int argc, char *argv[])
 		 * name of each file encountered
 		 */
 		fs::directory_iterator end_iter;
-		for (fs::directory_iterator dir_itr(userpath); dir_itr != end_iter; ++dir_itr)
-			cout << dir_itr->path().filename().string() << endl;
+		for (fs::directory_iterator dir_itr(userpath);
+		     dir_itr != end_iter; ++dir_itr)
+			cout << '(' << fs::file_size(dir_itr->path()) << "B) "
+			     << dir_itr->path().filename().string() << endl;
 	}
 
 	return 0;
