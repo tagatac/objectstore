@@ -1,14 +1,15 @@
-#executables = objput objget objlist
-executables = objput
+executables = objput objget objlist
+flags = -Wall
+boost_static_libraries = lib/libboost_system.a lib/libboost_filesystem.a
 
 all : $(executables)
 
-objput : objput.c++
-	c++ -o $@ objput.c++ -L lib -l boost_system -l boost_filesystem -static
-objget : objget.c
-	c++ -o $@ objget.c
-objlist : objlist.c
-	c++ -o $@ objlist.c
+objput : objput.c++ $(boost_static_libraries)
+	c++ $(flags) -o $@ objput.c++ $(boost_static_libraries)
+objget : objget.c++ $(boost_static_libraries)
+	c++ $(flags) -o $@ objget.c++ $(boost_static_libraries)
+objlist : objlist.c++ $(boost_static_libraries)
+	c++ $(flags) -o $@ objlist.c++ $(boost_static_libraries)
 
 .PHONY : clean
 clean :

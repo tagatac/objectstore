@@ -1,8 +1,11 @@
+// objput - Reads data from stdin and stores it in an object.
+
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <boost/filesystem.hpp>
 using namespace std;
+namespace fs = boost::filesystem;
 
 int main(int argc, char *argv[])
 {
@@ -13,15 +16,21 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	string line, objdir;
-	ofstream object;
+	string line;
 
+	// Prompt the user to enter data
 	cout << "Please enter file content:" << endl;
-	objdir = "data/" + (string) argv[2];
-	boost::filesystem::create_directories(objdir);
-	object.open((objdir + '/' + (string) argv[3]).c_str());
+
+	// Create the directory tree down to the user's directory
+	fs::path objdir("data");
+	objdir /= argv[2];
+	fs::create_directories(objdir);
+
+	// Transfer the data from stdin to the file
+	fs::path objpath(objdir);
+	objpath /= argv[3];
+	ofstream object(objpath.c_str());
 	while (getline(cin, line)) object << line << endl;
-	object.close();
 
 	return 0;
 }
