@@ -1,3 +1,11 @@
-This is a program that echos its arguments and counts the number of
-input lines.  Behavior if the last line does not end in \n is undefined.
-The arguments have no particular syntax.
+objput reads the contents of the object from stdin; objget writes the
+contents of a retrieved object to stdout.  objlist lists all of the objects
+belonging to the specified user; if the -l option is given (and options
+can appear in any order), all metadata associated with the object is
+displayed as well.
+
+The arguments are as follows:
+
+	objput -u username objname
+	objget -u username objname
+	objlist -u username [-l]
