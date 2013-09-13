@@ -22,6 +22,5 @@ clean :
 	rm -vf $(executables) *.core *.o
 
 archive :
-	rm -vf 
-	git archive -o ../dtagatac.$(homework_number).tar \
+	git archive -v -o ../dtagatac.$(homework_number).tar \
 		    --prefix=dmt2150.$(homework_number)/ HEAD
