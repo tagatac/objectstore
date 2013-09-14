@@ -2,4 +2,7 @@
 objput
 objget
 objlist
+objsetacl
+objgetacl
+objtestacl
 data

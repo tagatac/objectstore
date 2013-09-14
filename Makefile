@@ -1,5 +1,5 @@
-homework_number = 0
-executables = objput objget objlist
+homework_number = 1
+executables = objput objget objlist objsetacl
 flags = -Wall
 boost_libraries = -l boost_system -l boost_filesystem
 
@@ -11,6 +11,8 @@ objget : objget.c++
 	c++ $(flags) -o $@ objget.c++ $(boost_libraries)
 objlist : objlist.c++
 	c++ $(flags) -o $@ objlist.c++ $(boost_libraries)
+objsetacl : objsetacl.c++
+	c++ $(flags) -I include -o $@ $@.c++
 
 .PHONY : test exec clean archive
 
