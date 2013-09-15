@@ -1,12 +1,11 @@
-#include <string>
+#include <objstore.h>
 #include <iostream>
-#include <tclap/CmdLine.h>
+#include <string>
 #include <fstream>
+#include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
-
-void put_object(string, string, string);
 
 int main(int argc, char *argv[])
 {
@@ -34,8 +33,6 @@ int main(int argc, char *argv[])
 	}
 
 	put_object(username, groupname, objname);
-
-	return 0;
 }
 
 void put_object(string username, string groupname, string objname)

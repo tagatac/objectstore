@@ -1,27 +1,48 @@
-// objget - Writes the contents of a retrieved object to stdout.
-
-#include <string>
+#include <objstore.h>
 #include <iostream>
+#include <string>
 #include <fstream>
+#include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
 int main(int argc, char *argv[])
 {
-	// Check for correct parameters
-	if (argc < 4 || (string) argv[1] != "-u")
+	string username, groupname, objname;
+
+	// parse the commandline with TCLAP
+	try
 	{
-		cerr << "Usage: " << argv[0] << " -u username objname" << endl;
-		return 1;
+		TCLAP::CmdLine cmd("objget - Writes the contents of a retrieved object to stdout.", ' ');
+		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", "groupname");
+		cmd.add(groupnameArg);
+		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", "username");
+		cmd.add(usernameArg);
+		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name", true, "", "objname");
+		cmd.add(objnameArg);
+		cmd.parse(argc, argv);
+		username = usernameArg.getValue();
+		groupname = groupnameArg.getValue();
+		objname = objnameArg.getValue();
+	}
+	catch (TCLAP::ArgException &e)
+	{
+		cerr << "error: " << e.error() << " for arg " << e.argId()
+		     << endl;
 	}
 
+	return get_object(username, groupname, objname);
+}
+
+int get_object(string username, string groupname, string objname)
+{
 	string line;
 
 	// Open the file
 	fs::path objpath("data");
-	objpath /= argv[2];
-	objpath /= argv[3];
+	objpath /= username;
+	objpath /= objname;
 	ifstream object(objpath.c_str());
 	if (!object)
 	{
