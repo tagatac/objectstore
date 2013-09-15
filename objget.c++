@@ -15,11 +15,14 @@ int main(int argc, char *argv[])
 	try
 	{
 		TCLAP::CmdLine cmd("objget - Writes the contents of a retrieved object to stdout.", ' ');
-		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", "groupname");
+		GroupnameConstraint groupnameConstraint;
+		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", &groupnameConstraint);
 		cmd.add(groupnameArg);
-		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", "username");
+		UsernameConstraint usernameConstraint;
+		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", &usernameConstraint);
 		cmd.add(usernameArg);
-		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name", true, "", "objname");
+		ObjnameConstraint objnameConstraint;
+		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name", true, "", &objnameConstraint);
 		cmd.add(objnameArg);
 		cmd.parse(argc, argv);
 		username = usernameArg.getValue();

@@ -15,11 +15,13 @@ int main(int argc, char *argv[])
 	try
 	{
 		TCLAP::CmdLine cmd("objlist - Lists all of the objects belonging to the specified user.", ' ');
-		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", "groupname");
-		cmd.add(groupnameArg);
-		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", "username");
-		cmd.add(usernameArg);
 		TCLAP::SwitchArg metadataSwitch("l", "long", "Use a long listing format", cmd, false);
+		GroupnameConstraint groupnameConstraint;
+		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", &groupnameConstraint);
+		cmd.add(groupnameArg);
+		UsernameConstraint usernameConstraint;
+		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", &usernameConstraint);
+		cmd.add(usernameArg);
 		cmd.parse(argc, argv);
 		username = usernameArg.getValue();
 		groupname = groupnameArg.getValue();

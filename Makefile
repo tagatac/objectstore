@@ -2,17 +2,17 @@ homework_number = 1
 executables = objput objget objlist objsetacl
 flags = -Wall
 includes = -I include -I .
-boost_libraries = -l boost_system -l boost_filesystem
+boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
 
 build : $(executables)
 
-objput : objput.c++
+objput : objput.c++ objstore.h
 	c++ $(flags) $(includes) -o $@ objput.c++ $(boost_libraries)
-objget : objget.c++
+objget : objget.c++ objstore.h
 	c++ $(flags) $(includes) -o $@ objget.c++ $(boost_libraries)
-objlist : objlist.c++
+objlist : objlist.c++ objstore.h
 	c++ $(flags) $(includes) -o $@ objlist.c++ $(boost_libraries)
-objsetacl : objsetacl.c++
+objsetacl : objsetacl.c++ objstore.h
 	c++ $(flags) $(includes) -o $@ $@.c++
 
 .PHONY : test exec clean archive
