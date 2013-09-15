@@ -31,10 +31,10 @@ int main(int argc, char *argv[])
 		     << endl;
 	}
 
-	list_objects(username, groupname, metadata);
+	listObjects(username, groupname, metadata);
 }
 
-void list_objects(string username, string groupname, bool metadata)
+void listObjects(string username, string groupname, bool metadata)
 {
 	fs::path userpath = fs::current_path();
 	userpath /= "data";

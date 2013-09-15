@@ -32,10 +32,10 @@ int main(int argc, char *argv[])
 		     << endl;
 	}
 
-	return get_object(username, groupname, objname);
+	return getObject(username, groupname, objname);
 }
 
-int get_object(string username, string groupname, string objname)
+int getObject(string username, string groupname, string objname)
 {
 	string line;
 

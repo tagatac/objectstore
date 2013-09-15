@@ -32,10 +32,10 @@ int main(int argc, char *argv[])
 		     << endl;
 	}
 
-	put_object(username, groupname, objname);
+	putObject(username, groupname, objname);
 }
 
-void put_object(string username, string groupname, string objname)
+void putObject(string username, string groupname, string objname)
 {
 	string line;
 
