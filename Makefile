@@ -6,7 +6,7 @@ boost_libraries = -l boost_system -l boost_filesystem
 build : $(executables)
 
 objput : objput.c++
-	c++ $(flags) -o $@ objput.c++ $(boost_libraries)
+	c++ $(flags) -I include -o $@ objput.c++ $(boost_libraries)
 objget : objget.c++
 	c++ $(flags) -o $@ objget.c++ $(boost_libraries)
 objlist : objlist.c++
@@ -22,6 +22,9 @@ exec : build
 
 clean :
 	rm -vf $(executables) *.core *.o
+
+cleanstore :
+	rm -vrf data
 
 archive :
 	git archive -v -o ../dtagatac.$(homework_number).tar \

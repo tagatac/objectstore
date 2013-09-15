@@ -1,21 +1,45 @@
-// objput - Reads data from stdin and stores it in an object.
-
 #include <string>
 #include <iostream>
+#include <tclap/CmdLine.h>
 #include <fstream>
 #include <boost/filesystem.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
+void put_object(string, string, string);
+
 int main(int argc, char *argv[])
 {
-	// Check for correct parameters
-	if (argc < 4 || (string) argv[1] != "-u")
+	string username, groupname, objname;
+
+	// parse the commandline with TCLAP
+	try
 	{
-		cerr << "Usage: " << argv[0] << " -u username objname" << endl;
-		return 1;
+		TCLAP::CmdLine cmd("objput - Reads data from stdin and stores it in an object.", ' ');
+		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", "groupname");
+		cmd.add(groupnameArg);
+		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", "username");
+		cmd.add(usernameArg);
+		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name", true, "", "objname");
+		cmd.add(objnameArg);
+		cmd.parse(argc, argv);
+		username = usernameArg.getValue();
+		groupname = groupnameArg.getValue();
+		objname = objnameArg.getValue();
+	}
+	catch (TCLAP::ArgException &e)
+	{
+		cerr << "error: " << e.error() << " for arg " << e.argId()
+		     << endl;
 	}
 
+	put_object(username, groupname, objname);
+
+	return 0;
+}
+
+void put_object(string username, string groupname, string objname)
+{
 	string line;
 
 	// Prompt the user to enter data
@@ -23,14 +47,12 @@ int main(int argc, char *argv[])
 
 	// Create the directory tree down to the user's directory
 	fs::path objdir("data");
-	objdir /= argv[2];
+	objdir /= username;
 	fs::create_directories(objdir);
 
 	// Transfer the data from stdin to the file
 	fs::path objpath(objdir);
-	objpath /= argv[3];
+	objpath /= objname;
 	ofstream object(objpath.c_str());
 	while (getline(cin, line)) object << line << endl;
-
-	return 0;
 }

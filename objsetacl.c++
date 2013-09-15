@@ -5,6 +5,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+	// parse the commandline with TCLAP
 	try
 	{
 		TCLAP::CmdLine cmd("objsetacl - Reads an ACL from stdin and sets it.", ' ');
@@ -24,6 +25,8 @@ int main(int argc, char **argv)
 		cerr << "error: " << e.error() << " for arg " << e.argId()
 		     << endl;
 	}
+
+
 
 	return 0;
 }
