@@ -1,6 +1,8 @@
+// objlist.c++
+
 #include <objstore.h>
-#include <iostream>
 #include <string>
+#include <iostream>
 #include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
 using namespace std;
@@ -33,10 +35,10 @@ int main(int argc, char *argv[])
 		     << endl;
 	}
 
-	listObjects(username, groupname, metadata);
+	return listObjects(username, groupname, metadata);
 }
 
-void listObjects(string username, string groupname, bool metadata)
+int listObjects(string username, string groupname, bool metadata)
 {
 	fs::path userpath = fs::current_path();
 	userpath /= "data";
@@ -64,4 +66,6 @@ void listObjects(string username, string groupname, bool metadata)
 			cout << dir_itr->path().filename().string() << endl;
 		}
 	}
+
+	return 0;
 }

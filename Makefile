@@ -7,15 +7,15 @@ boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
 build : $(executables)
 
 objput : objput.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ objput.c++ $(boost_libraries)
+	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
 objget : objget.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ objget.c++ $(boost_libraries)
+	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
 objlist : objlist.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ objlist.c++ $(boost_libraries)
+	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
 objsetacl : objsetacl.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ $@.c++
+	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
 
-.PHONY : test exec clean archive
+.PHONY : test exec clean cleanstore archive
 
 test : build
 

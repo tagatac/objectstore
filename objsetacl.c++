@@ -1,32 +1,35 @@
+// objsetacl.c++
+
+#include <objstore.h>
 #include <string>
 #include <iostream>
-#include <tclap/CmdLine.h>
+#include <fstream>
+#include <boost/filesystem.hpp>
 using namespace std;
 
 int main(int argc, char **argv)
 {
-	// parse the commandline with TCLAP
-	try
-	{
-		TCLAP::CmdLine cmd("objsetacl - Reads an ACL from stdin and sets it.", ' ');
-		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", "groupname");
-		cmd.add(groupnameArg);
-		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", "username");
-		cmd.add(usernameArg);
-		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name", true, "", "objname");
-		cmd.add(objnameArg);
-		cmd.parse(argc, argv);
-		string username = usernameArg.getValue();
-		string groupname = groupnameArg.getValue();
-		string objname = objnameArg.getValue();
-	}
-	catch (TCLAP::ArgException &e)
-	{
-		cerr << "error: " << e.error() << " for arg " << e.argId()
-		     << endl;
-	}
+	string username, groupname, objname, owner, filename;
+	string desc("objsetacl - Reads an ACL from stdin and sets it.");
+	defaultCmdLine(username, groupname, objname, desc, argc, argv);
 
+	parseObjname(objname, owner, filename);
+	Object thisObject(owner, filename);
+	if (testACL(username, groupname, &thisObject, 'p'))
+		setACL(&thisObject);
+}
 
+int setACL(Object *)
+{
+	string line;
+
+	// Prompt the user to enter data
+	cout << "Please enter an ACL line or Ctrl+D to quit: ";
+
+//	while 
+//	{
+
+	cout << endl;
 
 	return 0;
 }

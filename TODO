@@ -1,0 +1,3 @@
+* make objput create the default ACL
+* write and read ACLs using objput and objget, respectively
+* specify the stream for objput and objget to read and write from, respectively
