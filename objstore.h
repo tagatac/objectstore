@@ -3,46 +3,37 @@
 #include <tclap/Constraint.h>
 #include <iostream>
 
-class UsernameConstraint : public TCLAP::Constraint<std::string>
+#define DEFAULT_REGEX "[\\w\\d_]+"
+#define DEFAULT_REGEX_DESCRIPTION "Can contain letters, digits, and underscores; no other characters are legal."
+#define OBJNAME_REGEX "[\\w\\d_]+(\\+[\\w\\d_]+)?"
+
+class RegexConstraint : public TCLAP::Constraint<std::string>
 {
+public:
+	RegexConstraint(std::string typeDesc, std::string exp = DEFAULT_REGEX, std::string desc = DEFAULT_REGEX_DESCRIPTION)
+	: _typeDesc(typeDesc),
+	  _exp(exp),
+	  _desc(desc)
+	{}
+
 	bool check(const std::string& val) const
 	{
-		std::string estring = "[\\w\\d_]+";
-		boost::regex e(estring);
+		boost::regex e(_exp);
 		return boost::regex_match(val, e);
 	}
 
 	std::string description() const
 	{
-		return "Can contain letters, digits, and underscores; no other characters are legal.";
+		return _desc;
 	}
 
 	std::string shortID() const
 	{
-		return "objname";
-	}
-};
-
-typedef UsernameConstraint GroupnameConstraint;
-
-class ObjnameConstraint : public TCLAP::Constraint<std::string>
-{
-	bool check(const std::string& val) const
-	{
-		std::string estring = "[\\w\\d_]+(\\+[\\w\\d_]+)?";
-		boost::regex e(estring);
-		return boost::regex_match(val, e);
+		return _typeDesc;
 	}
 
-	std::string description() const
-	{
-		return "Can contain letters, digits, and underscores; no other characters are legal.";
-	}
-
-	std::string shortID() const
-	{
-		return "objname";
-	}
+protected:
+	std::string _typeDesc, _exp, _desc;
 };
 
 void putObject(std::string, std::string, std::string);

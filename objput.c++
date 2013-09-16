@@ -15,13 +15,13 @@ int main(int argc, char *argv[])
 	try
 	{
 		TCLAP::CmdLine cmd("objput - Reads data from stdin and stores it in an object.", ' ');
-		GroupnameConstraint groupnameConstraint;
+		RegexConstraint groupnameConstraint("groupname");
 		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", &groupnameConstraint);
 		cmd.add(groupnameArg);
-		UsernameConstraint usernameConstraint;
+		RegexConstraint usernameConstraint("username");
 		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", &usernameConstraint);
 		cmd.add(usernameArg);
-		ObjnameConstraint objnameConstraint;
+		RegexConstraint objnameConstraint("objname", OBJNAME_REGEX);
 		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name", true, "", &objnameConstraint);
 		cmd.add(objnameArg);
 		cmd.parse(argc, argv);

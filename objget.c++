@@ -15,13 +15,13 @@ int main(int argc, char *argv[])
 	try
 	{
 		TCLAP::CmdLine cmd("objget - Writes the contents of a retrieved object to stdout.", ' ');
-		GroupnameConstraint groupnameConstraint;
+		RegexConstraint groupnameConstraint("groupname");
 		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", &groupnameConstraint);
 		cmd.add(groupnameArg);
-		UsernameConstraint usernameConstraint;
+		RegexConstraint usernameConstraint("username");
 		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", &usernameConstraint);
 		cmd.add(usernameArg);
-		ObjnameConstraint objnameConstraint;
+		RegexConstraint objnameConstraint("objname", "[\\w\\d_]+(\\+[\\w\\d_]+)?");
 		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name", true, "", &objnameConstraint);
 		cmd.add(objnameArg);
 		cmd.parse(argc, argv);

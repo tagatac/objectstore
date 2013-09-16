@@ -16,10 +16,10 @@ int main(int argc, char *argv[])
 	{
 		TCLAP::CmdLine cmd("objlist - Lists all of the objects belonging to the specified user.", ' ');
 		TCLAP::SwitchArg metadataSwitch("l", "long", "Use a long listing format", cmd, false);
-		GroupnameConstraint groupnameConstraint;
+		RegexConstraint groupnameConstraint("groupname");
 		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name", true, "", &groupnameConstraint);
 		cmd.add(groupnameArg);
-		UsernameConstraint usernameConstraint;
+		RegexConstraint usernameConstraint("username");
 		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", &usernameConstraint);
 		cmd.add(usernameArg);
 		cmd.parse(argc, argv);
