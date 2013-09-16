@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 		return getObject(&thisObject, cout);
 }
 
-int getObject(Object *thisObject, ofstream *thisOFStream)
+int getObject(Object *thisObject, ostream *thisOStream)
 {
 	string line;
 
@@ -36,7 +36,7 @@ int getObject(Object *thisObject, ofstream *thisOFStream)
 	}
 	// Write the contents of the file to stdout
 	else
-		while (getline (objectstream, line)) cout << line << endl;
+		while (getline (objectstream, line)) thisOStream << line << endl;
 
 	return 0;
 }

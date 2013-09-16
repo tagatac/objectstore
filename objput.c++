@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
 		// Prompt the user to enter data
 		cout << "Please enter file content:" << endl;
 		// Create the object on disk
-		return putObject(&thisObject, cin);
+		return putObject(&thisObject, &cin);
 	}
 }
 
-int putObject(Object *thisObject, ifstream *thisIFStream)
+int putObject(Object *thisObject, istream *thisIStream)
 {
 	string line;
 
@@ -38,7 +38,7 @@ int putObject(Object *thisObject, ifstream *thisIFStream)
 	fs::path objpath(objdir);
 	objpath /= thisObject->filename;
 	ofstream objectstream(objpath.c_str());
-	while (getline(thisIFStream, line)) objectstream << line << endl;
+	while (getline(*thisIStream, line)) objectstream << line << endl;
 
-	return 0
+	return 0;
 }

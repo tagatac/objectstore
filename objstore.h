@@ -100,7 +100,7 @@ void parseObjname(std::string objname, std::string &owner,
 
 }
 
-int putObject(Object *, std::ifstream *);
+int putObject(Object *, std::istream *);
 int getObject(Object *, std::ofstream *);
 int listObjects(std::string, std::string, bool);
 int setACL(Object *);
