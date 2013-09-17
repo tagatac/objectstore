@@ -1,4 +1,8 @@
 *.swp
+.project
+.cproject
+.DS_Store
+*.o
 objput
 objget
 objlist

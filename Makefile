@@ -1,19 +1,22 @@
 homework_number = 1
-executables = objput objget objlist objsetacl
+executables = objput objget objlist
+executable_dependencies = common.o Object.o RegexConstraint.o
 flags = -Wall
-includes = -I include -I .
 boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
 
 build : $(executables)
 
-objput : objput.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
-objget : objget.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
-objlist : objlist.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
-objsetacl : objsetacl.c++ objstore.h
-	c++ $(flags) $(includes) -o $@ $@.c++ $(boost_libraries)
+objput : objput.cpp $(executable_dependencies)
+	c++ $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+objget : objget.cpp $(executable_dependencies)
+	c++ $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+objlist : objlist.cpp RegexConstraint.o
+	c++ $(flags) -I include -o $@ $@.cpp RegexConstraint.o $(boost_libraries)
+
+common.o : common.cpp common.h RegexConstraint.h
+	c++ $(flags) -I include -c common.cpp
+RegexConstraint.o : RegexConstraint.cpp RegexConstraint.h
+	c++ $(flags) -I include -c RegexConstraint.cpp
 
 .PHONY : test exec clean cleanstore archive
 
