@@ -16,7 +16,7 @@ class Object
 public:
 	Object(std::string, std::string);
 	bool exists();
-	int put(std::istream &), get(std::ostream &);
+	int put(std::istream &), get(std::string &);
 	bool testACL(std::string, std::string, char);
 
 private:

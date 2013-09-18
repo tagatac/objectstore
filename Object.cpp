@@ -24,9 +24,10 @@ Object::Object(string o, string f)
 {
 	owner = o;
 	filename = f;
-	objpath = DATA_DIR;
+	objpath = fs::path(DATA_DIR);
 	objpath /= owner;
 	objpath /= filename;
+	cout << objpath << endl;
 
 	// Create a pointer to the ACL (but only if this Object is not an ACL)
 	if (owner != ACL_MANAGER)
@@ -37,7 +38,7 @@ Object::Object(string o, string f)
 		// If the file doesn't yet exist, create a default ACL for it
 		if (!exists())
 		{
-			istringstream ss(owner + ".*" + DEFAULT_PERMISSIONS);
+			istringstream ss(owner + ".*\t" + DEFAULT_PERMISSIONS);
 			ACL->put(ss);
 		}
 	}
@@ -45,16 +46,19 @@ Object::Object(string o, string f)
 
 bool Object::exists()
 {
+	cout << "exists for " << objpath << endl;
 	return fs::exists(objpath);
 }
 
 int Object::put(istream &thisIStream)
 {
+	cout << "objput for " << objpath << endl;
 	string line;
 
 	// Create the directory tree down to the user's directory
 	fs::path objdir(DATA_DIR);
 	objdir /= owner;
+	cout << "objput::objdir: " << objdir << endl;
 	fs::create_directories(objdir);
 
 	// Transfer the data from stdin to the file
@@ -64,9 +68,11 @@ int Object::put(istream &thisIStream)
 	return 0;
 }
 
-int Object::get(ostream &thisOStream)
+int Object::get(string &contents)
 {
+	cout << objpath << endl;
 	string line;
+	ostringstream ss;
 
 	// Open the file
 	ifstream objectstream(objpath.c_str());
@@ -77,7 +83,7 @@ int Object::get(ostream &thisOStream)
 	}
 	// Write the contents of the file to stdout
 	else
-		while (getline(objectstream, line)) thisOStream << line << endl;
+		while (getline(objectstream, line)) ss << line << endl;
 
 	return 0;
 }
@@ -87,11 +93,11 @@ bool Object::testACL(string username, string groupname, char access)
 	if (username == ACL_MANAGER) return true;
 
 	string permissions = ""; // give no permissions by default
-	string aclline;
-	fstream thisFStream;
+	string contents, aclline;
 
-	ACL->get(thisFStream);
-	while (getline(thisFStream, aclline))
+	ACL->get(contents);
+	istringstream ss(contents);
+	while (getline(ss, aclline))
 	{
 		int cursor1 = aclline.find(USER_DELIMITER);
 		string user = aclline.substr(0, cursor1);
