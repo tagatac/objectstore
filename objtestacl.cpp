@@ -1,12 +1,13 @@
-// objtestacl.c++
+// objtestacl.cpp
 
-#include <objstore.h>
+#include "common.h"
+#include "Object.h"
+#include "RegexConstraint.h"
 #include <string>
 #include <iostream>
-#include <tclap/CMDLINE.h>
+#include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
 using namespace std;
-namespace fs = boost::filesystem;
 
 int main(int argc, char *argv[])
 {
@@ -46,22 +47,16 @@ int main(int argc, char *argv[])
 		     << endl;
 	}
 
-	parseObjname(objname, owner, filename);
+	parseObjname(username, objname, owner, filename);
 	Object thisObject(owner, filename);
-	if testACL(username, groupname, &thisObject, 'v')
-		if testACL(username, groupname, &thisObject, access)
+	if (!thisObject.exists())
+	{
+		cerr << owner << "'s file \"" << filename << "\" does not exist." << endl;
+		return 1;
+	}
+	else
+		if (thisObject.testACL(username, groupname, access))
 			cout << "allowed" << endl;
 		else
 			cout << "denied" << endl;
-}
-
-bool testACL(string username, string groupname, Object *thisObject, char access)
-{
-	streambuf aclstream();
-	getObject
-	fs::path aclpath("data");
-	aclpath /= thisObject->ACL->owner;
-	aclpath /= thisObject->ACL->filename;
-	if (fs::exists(aclpath))
-	{}
 }

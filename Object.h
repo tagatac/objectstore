@@ -9,18 +9,20 @@
 #define OBJECT_H_
 
 #include <string>
+#include <boost/filesystem.hpp>
 
 class Object
 {
 public:
 	Object(std::string, std::string);
-	int put(), get();
-	//int put(), get(), setACL(), getACL();
+	bool exists();
+	int put(std::istream &), get(std::ostream &);
 	bool testACL(std::string, std::string, char);
 
 private:
 	std::string owner, filename;
 	Object *ACL;
+	boost::filesystem::path objpath;
 };
 
 #endif /* OBJECT_H_ */

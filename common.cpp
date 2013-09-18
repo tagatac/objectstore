@@ -5,12 +5,12 @@
  *      Author: tag
  */
 
+#include "common.h"
 #include "RegexConstraint.h"
 #include <string>
 #include <tclap/CmdLine.h>
 using namespace std;
 
-#define OBJNAME_REGEX "[\\w\\d_]+(\\+[\\w\\d_]+)?"
 #define OWNER_DELIMITER '+'
 
 void defaultCmdLine(string &username, string &groupname,
@@ -46,7 +46,7 @@ void defaultCmdLine(string &username, string &groupname,
 
 void parseObjname(string username, string objname, string &owner, string &filename)
 {
-	int pos(objname.find(OWNER_DELIMITER));
+	int pos = objname.find(OWNER_DELIMITER);
 	if (pos == string::npos)
 	{ // delimiter not found -> whole objname is the filename
 		owner = username;

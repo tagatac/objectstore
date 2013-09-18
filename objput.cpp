@@ -17,12 +17,11 @@ int main(int argc, char *argv[])
 
 	parseObjname(username, objname, owner, filename);
 	Object thisObject(owner, filename);
-	cout << owner;
 	if (thisObject.testACL(username, groupname, 'w'))
 	{
 		// Prompt the user to enter data
 		cout << "Please enter file content:" << endl;
 		// Create the object on disk
-		return thisObject.put();
+		return thisObject.put(cin);
 	}
 }
