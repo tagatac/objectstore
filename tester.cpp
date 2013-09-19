@@ -1,5 +1,5 @@
 /*
- * test.cpp
+ * tester.cpp
  *
  *  Created on: Sep 18, 2013
  *      Author: tag

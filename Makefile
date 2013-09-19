@@ -15,21 +15,22 @@ objlist : objlist.cpp RegexConstraint.o
 	$(compile) $(flags) -I include -o $@ $@.cpp RegexConstraint.o $(boost_libraries)
 objtestacl : objtestacl.cpp $(executable_dependencies)
 	$(compile) $(flags) -I include -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+tester : tester.o $(executable_dependencies)
+	$(compile) $(flags) -I include -o $@ $@.o common.o RegexConstraint.o $(boost_libraries) lib/libgtest.a
 
 common.o : common.cpp common.h RegexConstraint.h
 	$(compile) $(flags) -I include -c common.cpp
 RegexConstraint.o : RegexConstraint.cpp RegexConstraint.h
 	$(compile) $(flags) -I include -c RegexConstraint.cpp
+tester.o : tester.cpp common.h
+	$(compile) $(flags) -I include -c tester.cpp
 
-.PHONY : test build exec clean cleanstore archive
-test : test.o $(executable_dependencies)
-	$(compile) $(flags) -I include -o $@ $@.o common.o RegexConstraint.o $(boost_libraries) lib/libgtest.a
-	./test
-test.o : common.h
-	$(compile) $(flags) -I include -c test.cpp
+.PHONY : build test exec clean cleanstore archive
+test : tester
+	./tester
 exec : build
 clean :
-	rm -vf $(executables) test *.core *.o
+	rm -vf $(executables) tester *.core *.o
 cleanstore :
 	rm -vrf data
 archive :
