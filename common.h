@@ -11,6 +11,7 @@
 #include <string>
 
 #define OBJNAME_REGEX "[\\w\\d_]+(\\+[\\w\\d_]+)?"
+#define OWNER_DELIMITER '+'
 
 /* Parse the most common syntax commandline with TCLAP
  * (-u username -g groupname objname)

@@ -11,8 +11,6 @@
 #include <tclap/CmdLine.h>
 using namespace std;
 
-#define OWNER_DELIMITER '+'
-
 void defaultCmdLine(string &username, string &groupname,
 		    string &objname, string desc, int argc,
 		    char *argv[])
@@ -55,6 +53,6 @@ void parseObjname(string username, string objname, string &owner, string &filena
 	else
 	{ // delimiter found -> parse out the owner name
 		owner = objname.substr(0, pos);
-		filename = objname.substr(pos);
+		filename = objname.substr(pos + 1);
 	}
 }

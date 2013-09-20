@@ -19,10 +19,12 @@ objlist : objlist.cpp RegexConstraint.o
 objtestacl : objtestacl.cpp $(executable_dependencies)
 	$(compile) $(flags) -I include -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
 tester : tester.o $(executable_dependencies)
-	$(compile) $(flags) -I include -o $@ $@.o common.o RegexConstraint.o $(boost_libraries) lib/libgtest.a
+	$(compile) $(flags) -I include -o $@ $@.o $(executable_dependencies) $(boost_libraries) lib/libgtest.a
 
 common.o : common.cpp common.h RegexConstraint.h tclap
 	$(compile) $(flags) -I include -c common.cpp
+Object.o : Object.cpp Object.h common.h
+	$(compile) $(flags) -c Object.cpp
 RegexConstraint.o : RegexConstraint.cpp RegexConstraint.h tclap
 	$(compile) $(flags) -I include -c RegexConstraint.cpp
 tester.o : tester.cpp common.h tclap gtest
@@ -41,7 +43,7 @@ gtest : $(gtest_version).zip
 	cd $@; ./configure --prefix=$(prefix); make -i; make -i install
 
 .PHONY : build test exec clean cleanstore cleanlibs archive
-test : tester
+test : cleanstore tester
 	./tester
 exec : build
 clean :

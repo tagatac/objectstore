@@ -14,12 +14,6 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
-#define ACL_MANAGER "data-acl"
-#define DATA_DIR "data"
-#define DEFAULT_PERMISSIONS "rwxpv"
-#define USER_DELIMITER '.'
-#define GROUP_DELIMITER '\t'
-
 Object::Object(string o, string f)
 {
 	owner = o;
@@ -32,14 +26,16 @@ Object::Object(string o, string f)
 	// Create a pointer to the ACL (but only if this Object is not an ACL)
 	if (owner != ACL_MANAGER)
 	{
+		cout << "checkpoint 1 for " << objpath << endl;
 		Object thisACL(ACL_MANAGER, owner+'+'+filename);
 		ACL = &thisACL;
 
 		// If the file doesn't yet exist, create a default ACL for it
-		if (!exists())
+		cout << "checkpoint 2 for " << objpath << endl;
+		if (!exists() && !ACL->exists())
 		{
-			istringstream ss(owner + ".*\t" + DEFAULT_PERMISSIONS);
-			ACL->put(ss);
+			ACL->put(owner + ".*\t" + DEFAULT_PERMISSIONS + '\n');
+			cout << "checkpoint 3 for " << objpath << endl;
 		}
 	}
 }
@@ -50,20 +46,22 @@ bool Object::exists()
 	return fs::exists(objpath);
 }
 
-int Object::put(istream &thisIStream)
+int Object::put(string contents)
 {
 	cout << "objput for " << objpath << endl;
 	string line;
+	istringstream ss(contents);
 
 	// Create the directory tree down to the user's directory
 	fs::path objdir(DATA_DIR);
 	objdir /= owner;
-	cout << "objput::objdir: " << objdir << endl;
 	fs::create_directories(objdir);
 
-	// Transfer the data from stdin to the file
+	// Transfer the data from the passed string to the file
 	ofstream objectstream(objpath.c_str());
-	while (getline(thisIStream, line)) objectstream << line << endl;
+	cout << "objput meat for " << objpath << endl;
+	objectstream.write(contents.c_str(), sizeof(char) * contents.size());
+	cout << "objput post for " << objpath << endl;
 
 	return 0;
 }
@@ -78,7 +76,7 @@ int Object::get(string &contents)
 	ifstream objectstream(objpath.c_str());
 	if (!objectstream)
 	{
-		cerr<< "Invalid file: " << objpath << endl;
+		cerr << "Invalid file: " << objpath << endl;
 		return 1;
 	}
 	// Write the contents of the file to stdout
