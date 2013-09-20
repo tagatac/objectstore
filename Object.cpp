@@ -21,34 +21,27 @@ Object::Object(string o, string f)
 	objpath = fs::path(DATA_DIR);
 	objpath /= owner;
 	objpath /= filename;
-	cout << objpath << endl;
 
 	// Create a pointer to the ACL (but only if this Object is not an ACL)
 	if (owner != ACL_MANAGER)
 	{
-		cout << "checkpoint 1 for " << objpath << endl;
-		Object thisACL(ACL_MANAGER, owner+'+'+filename);
-		ACL = &thisACL;
+		ACL = new Object(ACL_MANAGER, owner+'+'+filename);
 
 		// If the file doesn't yet exist, create a default ACL for it
-		cout << "checkpoint 2 for " << objpath << endl;
 		if (!exists() && !ACL->exists())
 		{
-			ACL->put(owner + ".*\t" + DEFAULT_PERMISSIONS + '\n');
-			cout << "checkpoint 3 for " << objpath << endl;
+			ACL->put(owner + ".*" + GROUP_DELIMITER + DEFAULT_PERMISSIONS + '\n');
 		}
 	}
 }
 
 bool Object::exists()
 {
-	cout << "exists for " << objpath << endl;
 	return fs::exists(objpath);
 }
 
 int Object::put(string contents)
 {
-	cout << "objput for " << objpath << endl;
 	string line;
 	istringstream ss(contents);
 
@@ -59,19 +52,13 @@ int Object::put(string contents)
 
 	// Transfer the data from the passed string to the file
 	ofstream objectstream(objpath.c_str());
-	cout << "objput meat for " << objpath << endl;
 	objectstream.write(contents.c_str(), sizeof(char) * contents.size());
-	cout << "objput post for " << objpath << endl;
 
 	return 0;
 }
 
 int Object::get(string &contents)
 {
-	cout << objpath << endl;
-	string line;
-	ostringstream ss;
-
 	// Open the file
 	ifstream objectstream(objpath.c_str());
 	if (!objectstream)
@@ -81,7 +68,11 @@ int Object::get(string &contents)
 	}
 	// Write the contents of the file to stdout
 	else
-		while (getline(objectstream, line)) ss << line << endl;
+	{
+		istreambuf_iterator<char> eos;
+		// put a stream into a string (from http://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring)
+		contents = string(istreambuf_iterator<char>(objectstream), eos);
+	}
 
 	return 0;
 }
@@ -101,8 +92,9 @@ bool Object::testACL(string username, string groupname, char access)
 		string user = aclline.substr(0, cursor1);
 		if (user == "*" || user == username)
 		{
+			cout << "user: " << user << endl;
 			int cursor2 = aclline.find(GROUP_DELIMITER);
-			string group = aclline.substr(cursor1 + 1, cursor2);
+			string group = aclline.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
 			if (group == "*" || group == groupname)
 			{
 				permissions = aclline.substr(cursor2 + 1);
@@ -111,6 +103,7 @@ bool Object::testACL(string username, string groupname, char access)
 		}
 	}
 
+	cout << "Testing for access " << access << " on permissions: " << permissions << endl;
 	if (permissions.find(access) != string::npos) return true;
 	else return false;
 }

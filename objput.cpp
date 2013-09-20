@@ -18,7 +18,9 @@ int main(int argc, char *argv[])
 	{
 		// Prompt the user to enter data
 		cout << "Please enter file content:" << endl;
+		string line, contents;
+		while (getline(cin, line)) contents += line;
 		// Create the object on disk
-		return thisObject.put(cin);
+		return thisObject.put(contents);
 	}
 }

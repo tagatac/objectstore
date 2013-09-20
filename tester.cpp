@@ -51,15 +51,13 @@ class ObjectTest : public ::testing::Test
 protected:
 	virtual void SetUp()
 	{
-		Object object(TEST_USER1, TEST_FILE);
+		object =  new Object(TEST_USER1, TEST_FILE);
 		objpath = fs::path(DATA_DIR);
 		objpath /= TEST_USER1;
 		objpath /= TEST_FILE;
-		cout << "checkpoint 4 for " << objpath << endl;
 		aclpath = fs::path(DATA_DIR);
 		aclpath /= ACL_MANAGER;
 		aclpath /= (string) TEST_USER1 + OWNER_DELIMITER + TEST_FILE;
-		cout << "checkpoint 5 for " << objpath << endl;
 	}
 
 	Object *object;
@@ -67,7 +65,7 @@ protected:
 	string contents;
 	istreambuf_iterator<char> eos;
 };
-/*TEST_F(ObjectTest, Constructor)
+TEST_F(ObjectTest, Constructor)
 {
 	ASSERT_TRUE(fs::exists(aclpath));
 	ifstream aclstream(aclpath.c_str());
@@ -75,17 +73,16 @@ protected:
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
 	EXPECT_EQ((string) TEST_USER1 + ".*\t" + DEFAULT_PERMISSIONS + '\n',
 			  contents);
-}*/
+}
 TEST_F(ObjectTest, PreExists)
 {
-	cout << "checkpoint 6 for " << objpath << endl;
-	cout << (long int) object << endl;
 	EXPECT_FALSE(object->exists());
-	cout << "checkpoint 7 for " << objpath << endl;
 }
-/*TEST_F(ObjectTest, Put)
+TEST_F(ObjectTest, Put)
 {
 	object->put(TEST_CONTENTS);
+	ifstream objectstream(objpath.c_str());
+	contents = string(istreambuf_iterator<char>(objectstream), eos);
 	EXPECT_EQ(TEST_CONTENTS, contents);
 }
 TEST_F(ObjectTest, PostExists)
@@ -97,7 +94,7 @@ TEST_F(ObjectTest, Get)
 	object->get(contents);
 	EXPECT_EQ(TEST_CONTENTS, contents);
 }
-*/
+
 int main(int argc, char *argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);
