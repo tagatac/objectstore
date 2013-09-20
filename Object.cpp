@@ -42,9 +42,6 @@ bool Object::exists()
 
 int Object::put(string contents)
 {
-	string line;
-	istringstream ss(contents);
-
 	// Create the directory tree down to the user's directory
 	fs::path objdir(DATA_DIR);
 	objdir /= owner;
@@ -92,7 +89,6 @@ bool Object::testACL(string username, string groupname, char access)
 		string user = aclline.substr(0, cursor1);
 		if (user == "*" || user == username)
 		{
-			cout << "user: " << user << endl;
 			int cursor2 = aclline.find(GROUP_DELIMITER);
 			string group = aclline.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
 			if (group == "*" || group == groupname)
@@ -103,7 +99,6 @@ bool Object::testACL(string username, string groupname, char access)
 		}
 	}
 
-	cout << "Testing for access " << access << " on permissions: " << permissions << endl;
 	if (permissions.find(access) != string::npos) return true;
 	else return false;
 }

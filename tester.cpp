@@ -69,7 +69,6 @@ TEST_F(ObjectTest, Constructor)
 {
 	ASSERT_TRUE(fs::exists(aclpath));
 	ifstream aclstream(aclpath.c_str());
-	// put a stream into a string (from http://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring)
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
 	EXPECT_EQ((string) TEST_USER1 + ".*\t" + DEFAULT_PERMISSIONS + '\n',
 			  contents);
@@ -85,7 +84,7 @@ TEST_F(ObjectTest, Put)
 	contents = string(istreambuf_iterator<char>(objectstream), eos);
 	EXPECT_EQ(TEST_CONTENTS, contents);
 }
-TEST_F(ObjectTest, PostExists)
+TEST_F(ObjectTest, Exists)
 {
 	EXPECT_TRUE(object->exists());
 }
@@ -93,6 +92,11 @@ TEST_F(ObjectTest, Get)
 {
 	object->get(contents);
 	EXPECT_EQ(TEST_CONTENTS, contents);
+}
+TEST_F(ObjectTest, testACL)
+{
+	EXPECT_TRUE(object->testACL(TEST_USER1, TEST_GROUP, 'r'));
+	EXPECT_FALSE(object->testACL(TEST_USER2, TEST_GROUP, 'w'));
 }
 
 int main(int argc, char *argv[])
