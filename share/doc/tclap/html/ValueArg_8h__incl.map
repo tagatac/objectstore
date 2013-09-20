@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node7" href="$Arg_8h.html" title="tclap/Arg.h" alt="" coords="551,83,636,112"/>
-<area shape="rect" id="node40" href="$Constraint_8h.html" title="tclap/Constraint.h" alt="" coords="123,160,248,189"/>
-<area shape="rect" id="node21" href="$ArgException_8h.html" title="tclap/ArgException.h" alt="" coords="1229,160,1371,189"/>
-<area shape="rect" id="node26" href="$Visitor_8h.html" title="tclap/Visitor.h" alt="" coords="739,160,840,189"/>
-<area shape="rect" id="node28" href="$CmdLineInterface_8h.html" title="tclap/CmdLineInterface.h" alt="" coords="323,160,491,189"/>
-<area shape="rect" id="node36" href="$ArgTraits_8h.html" title="tclap/ArgTraits.h" alt="" coords="864,160,981,189"/>
-<area shape="rect" id="node38" href="$StandardTraits_8h.html" title="tclap/StandardTraits.h" alt="" coords="1005,160,1155,189"/>
-</map>

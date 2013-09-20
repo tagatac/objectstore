@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classTCLAP_1_1OptionalUnlabeledTracker.html#a59bfa7d01b45d4796500470c9218e390" title="TCLAP::OptionalUnlabeledTracker::check" alt="" coords="347,59,613,88"/>
-<area shape="rect" id="node9" href="$classTCLAP_1_1Arg.html#ac98a357568c21f0eb6ca2220b8a3d4a2" title="Returns a simple string representation of the argument." alt="" coords="407,112,553,141"/>
-<area shape="rect" id="node5" href="$classTCLAP_1_1OptionalUnlabeledTracker.html#a50fc04586196c0861491968fcdadf48b" title="TCLAP::OptionalUnlabeledTracker::alreadyOptional" alt="" coords="663,5,983,35"/>
-<area shape="rect" id="node7" href="$classTCLAP_1_1OptionalUnlabeledTracker.html#aca1fc2a02fbde351cce7ea05f0e6ef89" title="TCLAP::OptionalUnlabeledTracker::gotOptional" alt="" coords="675,59,971,88"/>
-<area shape="rect" id="node11" href="$classTCLAP_1_1Arg.html#af8e739295b0f75028e7bff6d670d97a1" title="TCLAP::Arg::flagStartString" alt="" coords="731,112,915,141"/>
-<area shape="rect" id="node13" href="$classTCLAP_1_1Arg.html#a1df2134870528b80f9f35347fef6fd14" title="TCLAP::Arg::nameStartString" alt="" coords="725,165,920,195"/>
-</map>

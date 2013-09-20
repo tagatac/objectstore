@@ -4,6 +4,9 @@ executables = objput objget objlist objtestacl
 executable_dependencies = common.o Object.o RegexConstraint.o
 flags = -Wall
 boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
+tclap_version = tclap-1.2.1
+gtest_version = gtest-1.7.0
+prefix = $(shell pwd)
 
 build : $(executables)
 
@@ -18,14 +21,26 @@ objtestacl : objtestacl.cpp $(executable_dependencies)
 tester : tester.o $(executable_dependencies)
 	$(compile) $(flags) -I include -o $@ $@.o common.o RegexConstraint.o $(boost_libraries) lib/libgtest.a
 
-common.o : common.cpp common.h RegexConstraint.h
+common.o : common.cpp common.h RegexConstraint.h tclap
 	$(compile) $(flags) -I include -c common.cpp
-RegexConstraint.o : RegexConstraint.cpp RegexConstraint.h
+RegexConstraint.o : RegexConstraint.cpp RegexConstraint.h tclap
 	$(compile) $(flags) -I include -c RegexConstraint.cpp
-tester.o : tester.cpp common.h
+tester.o : tester.cpp common.h tclap gtest
 	$(compile) $(flags) -I include -c tester.cpp
 
-.PHONY : build test exec clean cleanstore archive
+tclap : $(tclap_version).tar.gz
+	rm -vrf $@
+	tar -xzvf $(tclap_version).tar.gz
+	mv -v $(tclap_version) $@
+	cd $@; ./configure --prefix=$(prefix); make -i; make -i install
+
+gtest : $(gtest_version).zip
+	rm -vrf $@
+	unzip $(gtest_version).zip
+	mv -v $(gtest_version) $@
+	cd $@; ./configure --prefix=$(prefix); make -i; make -i install
+
+.PHONY : build test exec clean cleanstore cleanlibs archive
 test : tester
 	./tester
 exec : build
@@ -33,6 +48,8 @@ clean :
 	rm -vf $(executables) tester *.core *.o
 cleanstore :
 	rm -vrf data
+cleanlibs :
+	rm -vrf include lib share tclap gtest
 archive :
 	git archive -v -o ../dtagatac.$(homework_number).tar \
 		    --prefix=dmt2150.$(homework_number)/ HEAD

@@ -10,4 +10,9 @@ objsetacl
 objgetacl
 objtestacl
 tester
+include
+lib
+share
+tclap
+gtest
 data
