@@ -1,6 +1,6 @@
 homework_number = 1
 compile = c++
-executables = objput objget objlist objtestacl
+executables = objput objget objlist objsetacl objgetacl objtestacl
 executable_dependencies = common.o Object.o RegexConstraint.o
 flags = -Wall
 boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
@@ -16,6 +16,10 @@ objget : objget.cpp $(executable_dependencies)
 	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
 objlist : objlist.cpp RegexConstraint.o
 	$(compile) $(flags) -I include -o $@ $@.cpp RegexConstraint.o $(boost_libraries)
+objsetacl : objsetacl.cpp $(executable_dependencies)
+	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+objgetacl : objgetacl.cpp $(executable_dependencies)
+	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
 objtestacl : objtestacl.cpp $(executable_dependencies)
 	$(compile) $(flags) -I include -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
 tester : tester.o $(executable_dependencies)
@@ -46,6 +50,8 @@ gtest : $(gtest_version).zip
 test : cleanstore tester
 	./tester
 exec : build
+	@read -p "Please enter the command to run: " command; \
+	./$$command
 clean :
 	rm -vf $(executables) tester *.core *.o
 cleanstore :

@@ -94,11 +94,16 @@ TEST_F(ObjectTest, Get)
 	object->get(contents);
 	EXPECT_EQ(TEST_CONTENTS, contents);
 }
-TEST_F(ObjectTest, setACL)
+TEST_F(ObjectTest, SetACL)
 {
 	object->setACL(TEST_ACL);
 	ifstream aclstream(aclpath.c_str());
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
+	EXPECT_EQ(TEST_ACL, contents);
+}
+TEST_F(ObjectTest, GetACL)
+{
+	object->getACL(contents);
 	EXPECT_EQ(TEST_ACL, contents);
 }
 TEST_F(ObjectTest, testACL)

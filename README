@@ -1,11 +1,16 @@
-objput reads the contents of the object from stdin; objget writes the
-contents of a retrieved object to stdout.  objlist lists all of the objects
-belonging to the specified user; if the -l option is given (and options
-can appear in any order), all metadata associated with the object is
-displayed as well.
+objput reads the contents of the object from stdin; objget writes the contents
+of a retrieved object to stdout.  objlist lists all of the objects belonging to
+the specified user; if the -l option is given (and options can appear in any
+order), all metadata associated with the object is displayed as well.  The
+objsetacl command reads an ACL from stdin.  The objgetacl command writes an
+object's ACL to stdout.  objtestacl tests file permissions; it outputs the
+single word "allowed" or "denied".
 
 The arguments are as follows:
 
 	objput -u username objname
 	objget -u username objname
 	objlist -u username [-l]
+	objsetacl -u username -g groupname objname
+	objgetacl -u username -g groupname objname
+	objtestacl -u username -g groupname -a access objname

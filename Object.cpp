@@ -79,6 +79,11 @@ int Object::setACL(string contents)
 	return ACL->put(contents);
 }
 
+int Object::getACL(string &contents)
+{
+	return ACL->get(contents);
+}
+
 bool Object::testACL(string username, string groupname, char access)
 {
 	if (username == ACL_MANAGER) return true;

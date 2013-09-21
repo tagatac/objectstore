@@ -1,4 +1,9 @@
-// objget.cpp
+/*
+ * objgetacl.cpp
+ *
+ *  Created on: Sep 20, 2013
+ *      Author: tag
+ */
 
 #include "common.h"
 #include "Object.h"
@@ -9,7 +14,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	string username, groupname, objname, owner, filename;
-	string desc = "objget - Writes the contents of a retrieved object to stdout.";
+	string desc = "objgetacl - Writes an object's ACL to stdout.";
 	defaultCmdLine(username, groupname, objname, desc, argc, argv);
 
 	parseObjname(username, objname, owner, filename);
@@ -18,15 +23,15 @@ int main(int argc, char *argv[])
 	{
 		string contents;
 		int retval;
-		if (!(retval = thisObject.get(contents)))
+		if (!(retval = thisObject.getACL(contents)))
 			cout << contents << endl;
 		return retval;
 	}
 	else
 	{
 		cerr << "User '" << username
-			 << "' does not have permission to get object '" << objname << "'."
-			 << endl;
+			 << "' does not have permission to get the ACL for object '"
+			 << objname << "'." << endl;
 		return 1;
 	}
 }
