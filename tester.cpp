@@ -20,6 +20,7 @@ namespace fs = boost::filesystem;
 #define TEST_GROUP "students"
 #define TEST_FILE "newfile"
 #define TEST_CONTENTS "This is test file content.\n"
+#define TEST_ACL "david.students	rwxpv\njill.ta	rxv\n"
 
 class ParseObjnameTest : public ::testing::Test
 {
@@ -92,6 +93,13 @@ TEST_F(ObjectTest, Get)
 {
 	object->get(contents);
 	EXPECT_EQ(TEST_CONTENTS, contents);
+}
+TEST_F(ObjectTest, setACL)
+{
+	object->setACL(TEST_ACL);
+	ifstream aclstream(aclpath.c_str());
+	contents = string(istreambuf_iterator<char>(aclstream), eos);
+	EXPECT_EQ(TEST_ACL, contents);
 }
 TEST_F(ObjectTest, testACL)
 {

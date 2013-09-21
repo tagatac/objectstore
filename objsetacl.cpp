@@ -1,4 +1,4 @@
-// objput.cpp
+// objsetacl.c++
 
 #include "common.h"
 #include "Object.h"
@@ -6,15 +6,15 @@
 #include <iostream>
 using namespace std;
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	string username, groupname, objname, owner, filename;
-	string desc = "objput - Reads data from stdin and stores it in an object.";
+	string desc = "objsetacl - Reads an ACL from stdin and sets it.";
 	defaultCmdLine(username, groupname, objname, desc, argc, argv);
 
 	parseObjname(username, objname, owner, filename);
 	Object thisObject(owner, filename);
-	if (thisObject.testACL(username, groupname, 'w'))
+	if (thisObject.testACL(username, groupname, 'p'))
 	{
 		// Prompt the user to enter data
 		cout << "Please enter file content:" << endl;
@@ -23,13 +23,13 @@ int main(int argc, char *argv[])
 		istreambuf_iterator<char> eos;
 		contents = string(istreambuf_iterator<char>(cin), eos);
 		// Create the object on disk
-		return thisObject.put(contents);
+		return thisObject.setACL(contents);
 	}
 	else
 	{
 		cerr << "User '" << username
-			 << "' does not have permission to put object '" << objname << "'."
-			 << endl;
+			 << "' does not have permission to set the ACL for object '"
+			 << objname << "'." << endl;
 		return 1;
 	}
 }

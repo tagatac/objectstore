@@ -67,18 +67,23 @@ int Object::get(string &contents)
 	else
 	{
 		istreambuf_iterator<char> eos;
-		// put a stream into a string (from http://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring)
+		// Put the stream into a string (from http://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring)
 		contents = string(istreambuf_iterator<char>(objectstream), eos);
 	}
 
 	return 0;
 }
 
+int Object::setACL(string contents)
+{
+	return ACL->put(contents);
+}
+
 bool Object::testACL(string username, string groupname, char access)
 {
 	if (username == ACL_MANAGER) return true;
 
-	string permissions = ""; // give no permissions by default
+	string permissions = ""; // Give no permissions by default
 	string contents, aclline;
 
 	ACL->get(contents);

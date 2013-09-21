@@ -22,7 +22,7 @@ class Object
 public:
 	Object(std::string, std::string);
 	bool exists();
-	int put(std::string), get(std::string &);
+	int put(std::string), get(std::string &), setACL(std::string);
 	bool testACL(std::string, std::string, char);
 
 private:
