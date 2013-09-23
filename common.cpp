@@ -44,7 +44,7 @@ void defaultCmdLine(string &username, string &groupname,
 
 void parseObjname(string username, string objname, string &owner, string &filename)
 {
-	int pos = objname.find(OWNER_DELIMITER);
+	size_t pos = objname.find(OWNER_DELIMITER);
 	if (pos == string::npos)
 	{ // delimiter not found -> whole objname is the filename
 		owner = username;
