@@ -1,4 +1,9 @@
-// objsetacl.c++
+/*
+ * objsetacl.cpp
+ *
+ *  Created on: Sep 14, 2013
+ *      Author: David Tagatac
+ */
 
 #include "common.h"
 #include "Object.h"
@@ -14,7 +19,7 @@ int main(int argc, char **argv)
 
 	parseObjname(username, objname, owner, filename);
 	Object thisObject(owner, filename);
-	if (thisObject.testACL(username, groupname, 'p'))
+	if (userfileTest(username, groupname) && thisObject.testACL(username, groupname, 'p'))
 	{
 		// Prompt the user to enter data
 		cout << "Please enter file content:" << endl;

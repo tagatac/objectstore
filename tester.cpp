@@ -2,7 +2,7 @@
  * tester.cpp
  *
  *  Created on: Sep 18, 2013
- *      Author: tag
+ *      Author: David Tagatac
  */
 
 #include "gtest/gtest.h"
@@ -15,12 +15,23 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
+#define TEST_USERFILE "david student\njill student ta\n"
 #define TEST_USER1 "david"
 #define TEST_USER2 "jill"
-#define TEST_GROUP "students"
+#define TEST_GROUP1 "student"
+#define TEST_GROUP2 "ta"
 #define TEST_FILE "newfile"
 #define TEST_CONTENTS "This is test file content.\n"
-#define TEST_ACL "david.students	rwxpv\njill.ta	rxv\n"
+#define TEST_ACL "david.student	rwxpv\njill.ta	rxv\n"
+
+TEST(UserfileTestTest, Belongs)
+{
+	EXPECT_TRUE(userfileTest(TEST_USER1, TEST_GROUP1));
+}
+TEST(UserfileTestTest, DoesNotBelong)
+{
+	EXPECT_FALSE(userfileTest(TEST_USER1, TEST_GROUP2));
+}
 
 class ParseObjnameTest : public ::testing::Test
 {
@@ -71,8 +82,8 @@ TEST_F(ObjectTest, Constructor)
 	ASSERT_TRUE(fs::exists(aclpath));
 	ifstream aclstream(aclpath.c_str());
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
-	EXPECT_EQ((string) TEST_USER1 + ".*\t" + DEFAULT_PERMISSIONS + '\n',
-			  contents);
+	EXPECT_EQ((string) TEST_USER1 + ".*" + GROUP_DELIMITER + DEFAULT_PERMISSIONS
+			  + '\n', contents);
 }
 TEST_F(ObjectTest, PreExists)
 {
@@ -108,12 +119,19 @@ TEST_F(ObjectTest, GetACL)
 }
 TEST_F(ObjectTest, testACL)
 {
-	EXPECT_TRUE(object->testACL(TEST_USER1, TEST_GROUP, 'r'));
-	EXPECT_FALSE(object->testACL(TEST_USER2, TEST_GROUP, 'w'));
+	EXPECT_TRUE(object->testACL(TEST_USER1, TEST_GROUP1, 'r'));
+	EXPECT_FALSE(object->testACL(TEST_USER2, TEST_GROUP1, 'w'));
 }
 
 int main(int argc, char *argv[])
 {
+	// Write the test userfile
+	fs::path userfilepath(USERFILE);
+	string contents = TEST_USERFILE;
+	ofstream userfilestream(userfilepath.c_str());
+	userfilestream.write(contents.c_str(), sizeof(char) * contents.size());
+	userfilestream.close();
+
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }

@@ -2,14 +2,17 @@
  * common.cpp
  *
  *  Created on: Sep 17, 2013
- *      Author: tag
+ *      Author: David Tagatac
  */
 
 #include "common.h"
 #include "RegexConstraint.h"
 #include <string>
+#include <fstream>
 #include <tclap/CmdLine.h>
+#include <boost/filesystem.hpp>
 using namespace std;
+namespace fs = boost::filesystem;
 
 void defaultCmdLine(string &username, string &groupname,
 		    string &objname, string desc, int argc,
@@ -40,6 +43,46 @@ void defaultCmdLine(string &username, string &groupname,
 	{
 		cerr << "error: " << e.error() << " for arg " << e.argId() << endl;
 	}
+}
+
+bool userfileTest(string username, string groupname)
+{
+	fs::path userfilepath(USERFILE);
+	string userfileline;
+
+	// Open the userfile
+	ifstream userfilestream(userfilepath.c_str());
+	if (!userfilestream)
+	{
+		cerr << "Invalid userfile!" << endl;
+		return false;
+	}
+	// Parse each line of the userfile until the user is found.
+	while (getline(userfilestream, userfileline))
+	{
+		// First match the user.
+		int cursor2, cursor1 = userfileline.find(USERFILE_DELIMITER);
+		string user = userfileline.substr(0, cursor1);
+		if (user == username)
+		{
+			// If the user matches, match the group.
+			do
+			{
+				cursor2 = userfileline.find(USERFILE_DELIMITER, cursor1 + 1);
+				string group = userfileline.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
+				// If the user and the group match, use these permissions.
+				if (group == groupname) return true;
+				else cursor1 = cursor2;
+			}
+			while (cursor2 != string::npos);
+		}
+	}
+	/* If, after looking at every line, the user/group pair is not found, this
+	 * user does not belong to this group.
+	 */
+	cerr << "Error: User '" << username << "' does not belong to group '"
+		 << groupname << "'." << endl;
+	return false;
 }
 
 void parseObjname(string username, string objname, string &owner, string &filename)

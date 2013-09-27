@@ -1,4 +1,9 @@
-// objget.cpp
+/*
+ * objget.cpp
+ *
+ *  Created on: Sep 12, 2013
+ *      Author: David Tagatac
+ */
 
 #include "common.h"
 #include "Object.h"
@@ -14,7 +19,7 @@ int main(int argc, char *argv[])
 
 	parseObjname(username, objname, owner, filename);
 	Object thisObject(owner, filename);
-	if (thisObject.testACL(username, groupname, 'r'))
+	if (userfileTest(username, groupname) && thisObject.testACL(username, groupname, 'r'))
 	{
 		string contents;
 		int retval;

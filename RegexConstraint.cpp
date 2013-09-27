@@ -2,7 +2,7 @@
  * RegexConstraint.cpp
  *
  *  Created on: Sep 17, 2013
- *      Author: tag
+ *      Author: David Tagatac
  */
 
 #include "RegexConstraint.h"

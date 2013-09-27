@@ -1,4 +1,9 @@
-// objtestacl.cpp
+/*
+ * objtestacl.cpp
+ *
+ *  Created on: Sep 15, 2013
+ *      Author: David Tagatac
+ */
 
 #include "common.h"
 #include "Object.h"
@@ -11,15 +16,13 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	string username, groupname, objname, owner, filename;
-	char access;
+	string username, groupname, objname, owner, filename, accesses;
 
 	// parse the commandline with TCLAP
 	try
 	{
 		TCLAP::CmdLine cmd("objtestacl - tests file permissions and outputs the single word 'allowed' or 'denied'.", ' ');
-		RegexConstraint accessConstraint("access", "[rwxpv]",
-						 "r|w|x|p|v");
+		RegexConstraint accessConstraint("access", "[rwxpv]*", "r|w|x|p|v");
 		TCLAP::ValueArg<string> accessArg("a", "access",
 				"Access required", true, "", &accessConstraint);
 		cmd.add(accessArg);
@@ -38,25 +41,36 @@ int main(int argc, char *argv[])
 		cmd.parse(argc, argv);
 		username = usernameArg.getValue();
 		groupname = groupnameArg.getValue();
-		access = accessArg.getValue().at(1);
+		accesses = accessArg.getValue();
 		objname = objnameArg.getValue();
 	}
 	catch (TCLAP::ArgException &e)
 	{
-		cerr << "error: " << e.error() << " for arg " << e.argId()
-		     << endl;
+		cerr << "error: " << e.error() << " for arg " << e.argId() << endl;
 	}
 
 	parseObjname(username, objname, owner, filename);
 	Object thisObject(owner, filename);
+	// Check that the user belongs to the group.
+	if (!userfileTest(username, groupname))
+		return 1;
+	// Check that the object is in the object store.
 	if (!thisObject.exists())
 	{
-		cerr << owner << "'s file \"" << filename << "\" does not exist." << endl;
+		cerr << owner << "'s object \"" << filename << "\" does not exist."
+			 << endl;
 		return 1;
 	}
-	else
-		if (thisObject.testACL(username, groupname, access))
-			cout << "allowed" << endl;
-		else
+	/* Loop through all of the accesses given, checking if user username has
+	 * that access as a member of group groupname.  Answer "denied" if any of
+	 * the access tests fail.
+	 */
+	for(int i=0; i<accesses.length(); i++)
+		if (!thisObject.testACL(username, groupname, accesses.at(i)))
+		{
 			cout << "denied" << endl;
+			return 0;
+		}
+	// If none of the access tests fail, answer "allowed".
+	cout << "allowed" << endl;
 }

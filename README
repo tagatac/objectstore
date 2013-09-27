@@ -14,3 +14,11 @@ The arguments are as follows:
 	objsetacl -u username -g groupname objname
 	objgetacl -u username -g groupname objname
 	objtestacl -u username -g groupname -a access objname
+
+
+Assumptions
+===========
+1) Anyone with access to the objtestacl command is allowed to know the contents
+	of all ACLs.
+2) An ACL line specifying no access will still have a tab following the user and
+	group names.

@@ -1,4 +1,9 @@
-// objlist.cpp
+/*
+ * objlist.cpp
+ *
+ *  Created on: Sep 12, 2013
+ *      Author: David Tagatac
+ */
 
 #include "RegexConstraint.h"
 #include <string>
@@ -8,6 +13,9 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
+/* Writes to stdout a list of user username's files.  If the metadata flag is
+ * set, the size of each file is also written to stdout.
+ */
 int listObjects(string username, bool metadata)
 {
 	fs::path userpath = fs::current_path();
