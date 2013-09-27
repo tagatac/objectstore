@@ -6,7 +6,7 @@ flags = -Wall
 boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
 tclap_version = tclap-1.2.1
 gtest_version = gtest-1.7.0
-prefix = $(shell pwd)
+prefix = '$(shell pwd)'
 
 build : $(executables)
 
