@@ -61,7 +61,7 @@ bool userfileTest(string username, string groupname)
 	while (getline(userfilestream, userfileline))
 	{
 		// First match the user.
-		int cursor2, cursor1 = userfileline.find(USERFILE_DELIMITER);
+		size_t cursor2, cursor1 = userfileline.find(USERFILE_DELIMITER);
 		string user = userfileline.substr(0, cursor1);
 		if (user == username)
 		{

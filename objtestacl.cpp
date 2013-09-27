@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	try
 	{
 		TCLAP::CmdLine cmd("objtestacl - tests file permissions and outputs the single word 'allowed' or 'denied'.", ' ');
-		RegexConstraint accessConstraint("access", "[rwxpv]*", "r|w|x|p|v");
+		RegexConstraint accessConstraint("access", "[rwxpv]*", "[r][w][x][p][v]");
 		TCLAP::ValueArg<string> accessArg("a", "access",
 				"Access required", true, "", &accessConstraint);
 		cmd.add(accessArg);
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 	 * that access as a member of group groupname.  Answer "denied" if any of
 	 * the access tests fail.
 	 */
-	for(int i=0; i<accesses.length(); i++)
+	for(unsigned int i=0; i<accesses.length(); i++)
 		if (!thisObject.testACL(username, groupname, accesses.at(i)))
 		{
 			cout << "denied" << endl;
