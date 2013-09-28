@@ -9,7 +9,6 @@
 #include "common.h"
 #include "Object.h"
 #include <string>
-//#include <fstream>
 #include <sstream>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
