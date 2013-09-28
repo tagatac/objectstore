@@ -9,9 +9,10 @@
 #include "common.h"
 #include <string>
 #include <iostream>
-#include <fstream>
+//#include <fstream>
 #include <sstream>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
@@ -49,7 +50,7 @@ int Object::put(string contents)
 	fs::create_directories(objdir);
 
 	// Transfer the data from the passed string to the file
-	ofstream objectstream(objpath.c_str());
+	fs::ofstream objectstream(objpath);
 	objectstream.write(contents.c_str(), sizeof(char) * contents.size());
 
 	return 0;
@@ -58,7 +59,7 @@ int Object::put(string contents)
 int Object::get(string &contents)
 {
 	// Open the file
-	ifstream objectstream(objpath.c_str());
+	fs::ifstream objectstream(objpath);
 	if (!objectstream)
 	{
 		cerr << "Invalid file: " << objpath << endl;

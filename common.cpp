@@ -8,9 +8,10 @@
 #include "common.h"
 #include "RegexConstraint.h"
 #include <string>
-#include <fstream>
+//#include <fstream>
 #include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
@@ -51,7 +52,7 @@ bool userfileTest(string username, string groupname)
 	string userfileline;
 
 	// Open the userfile
-	ifstream userfilestream(userfilepath.c_str());
+	fs::ifstream userfilestream(userfilepath);
 	if (!userfilestream)
 	{
 		cerr << "Invalid userfile!" << endl;

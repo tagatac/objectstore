@@ -1,8 +1,22 @@
+#VIm
 *.swp
+
+#Eclipse
 .project
 .cproject
 .DS_Store
+
+#Visual Studio
+*.opensdf
+*.sdf
+*.sln
+*.suo
+*.vcxproj
+*.filters
+
+#Binaries
 *.o
+*.exe
 objput
 objget
 objlist
@@ -10,9 +24,13 @@ objsetacl
 objgetacl
 objtestacl
 tester
+
+#Libraries
 include
 lib
 share
 tclap
 gtest
+
+#Test Data
 data

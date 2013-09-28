@@ -9,9 +9,10 @@
 #include "common.h"
 #include "Object.h"
 #include <string>
-#include <fstream>
+//#include <fstream>
 #include <sstream>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
@@ -80,7 +81,7 @@ protected:
 TEST_F(ObjectTest, Constructor)
 {
 	ASSERT_TRUE(fs::exists(aclpath));
-	ifstream aclstream(aclpath.c_str());
+	fs::ifstream aclstream(aclpath);
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
 	EXPECT_EQ((string) TEST_USER1 + ".*" + GROUP_DELIMITER + DEFAULT_PERMISSIONS
 			  + '\n', contents);
@@ -92,7 +93,7 @@ TEST_F(ObjectTest, PreExists)
 TEST_F(ObjectTest, Put)
 {
 	object->put(TEST_CONTENTS);
-	ifstream objectstream(objpath.c_str());
+	fs::ifstream objectstream(objpath);
 	contents = string(istreambuf_iterator<char>(objectstream), eos);
 	EXPECT_EQ(TEST_CONTENTS, contents);
 }
@@ -108,7 +109,7 @@ TEST_F(ObjectTest, Get)
 TEST_F(ObjectTest, SetACL)
 {
 	object->setACL(TEST_ACL);
-	ifstream aclstream(aclpath.c_str());
+	fs::ifstream aclstream(aclpath);
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
 	EXPECT_EQ(TEST_ACL, contents);
 }
@@ -128,7 +129,7 @@ int main(int argc, char *argv[])
 	// Write the test userfile
 	fs::path userfilepath(USERFILE);
 	string contents = TEST_USERFILE;
-	ofstream userfilestream(userfilepath.c_str());
+	fs::ofstream userfilestream(userfilepath);
 	userfilestream.write(contents.c_str(), sizeof(char) * contents.size());
 	userfilestream.close();
 
