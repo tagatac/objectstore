@@ -22,3 +22,5 @@ Assumptions
 	of all ACLs.
 2) An ACL line specifying no access will still have a tab following the user and
 	group names.
+3) Anyone with access to the objlist command is allowed to know the filenames
+	of all objects stored.
