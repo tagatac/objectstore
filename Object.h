@@ -16,6 +16,7 @@
 #define DEFAULT_PERMISSIONS "rwxpv"
 #define USER_DELIMITER '.'
 #define GROUP_DELIMITER '\t'
+#define MAX_USERS 1024
 
 /* Represents an object stored (or to-be-stored) in the object store. Provides
  * methods to store and retrieve objects and ACL details of those objects.

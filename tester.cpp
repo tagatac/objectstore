@@ -18,11 +18,15 @@ namespace fs = boost::filesystem;
 #define TEST_USERFILE "david student\njill student ta\n"
 #define TEST_USER1 "david"
 #define TEST_USER2 "jill"
+#define TEST_USER3 "georgios"
 #define TEST_GROUP1 "student"
 #define TEST_GROUP2 "ta"
 #define TEST_FILE "newfile"
+#define TEST_FILE1 "jill+newfile1"
 #define TEST_CONTENTS "This is test file content.\n"
-#define TEST_ACL "david.student	rwxpv\njill.ta	rxv\n"
+#define TEST_ACL "david.student\trwxpv\njill.ta\trxv\n"
+#define BAD_ACL1 "georgios.*\trw\n"
+#define BAD_ACL2 "david.student rwxpv\n"
 
 TEST(UserfileTestTest, Belongs)
 {
@@ -79,11 +83,7 @@ protected:
 };
 TEST_F(ObjectTest, Constructor)
 {
-	ASSERT_TRUE(fs::exists(aclpath));
-	fs::ifstream aclstream(aclpath);
-	contents = string(istreambuf_iterator<char>(aclstream), eos);
-	EXPECT_EQ((string) TEST_USER1 + ".*" + GROUP_DELIMITER + DEFAULT_PERMISSIONS
-			  + '\n', contents);
+	EXPECT_FALSE(fs::exists(aclpath));
 }
 TEST_F(ObjectTest, PreExists)
 {
@@ -111,9 +111,18 @@ TEST_F(ObjectTest, SetACL)
 	fs::ifstream aclstream(aclpath);
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
 	EXPECT_EQ(TEST_ACL, contents);
+	object->setACL(BAD_ACL1);
+	fs::ifstream badaclstream1(aclpath);
+	contents = string(istreambuf_iterator<char>(badaclstream1), eos);
+	EXPECT_EQ(TEST_ACL, contents);
+	object->setACL(BAD_ACL2);
+	fs::ifstream badaclstream2(aclpath);
+	contents = string(istreambuf_iterator<char>(badaclstream2), eos);
+	EXPECT_EQ(TEST_ACL, contents);
 }
 TEST_F(ObjectTest, GetACL)
 {
+	object->setACL(TEST_ACL);
 	object->getACL(contents);
 	EXPECT_EQ(TEST_ACL, contents);
 }
@@ -121,6 +130,15 @@ TEST_F(ObjectTest, testACL)
 {
 	EXPECT_TRUE(object->testACL(TEST_USER1, TEST_GROUP1, 'r'));
 	EXPECT_FALSE(object->testACL(TEST_USER2, TEST_GROUP1, 'w'));
+}
+
+TEST(ACLTest, NoObject)
+{
+	new Object(TEST_USER2, TEST_FILE);
+	fs::path aclpath = fs::path(DATA_DIR);
+	aclpath /= ACL_MANAGER;
+	aclpath /= (string) TEST_USER2 + OWNER_DELIMITER + TEST_FILE;
+	EXPECT_FALSE(fs::exists(aclpath));
 }
 
 int main(int argc, char *argv[])

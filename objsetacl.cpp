@@ -19,6 +19,11 @@ int main(int argc, char **argv)
 
 	parseObjname(username, objname, owner, filename);
 	Object thisObject(owner, filename);
+	if (!thisObject.exists())
+	{
+		cerr << "Error: Attempting to set an ACL for a non-existent object." << endl;
+		return 1;
+	}
 	if (userfileTest(username, groupname) && thisObject.testACL(username, groupname, 'p'))
 	{
 		// Prompt the user to enter data
@@ -35,6 +40,16 @@ int main(int argc, char **argv)
 		cerr << "User '" << username
 			 << "' does not have permission to set the ACL for object '"
 			 << objname << "'." << endl;
+		if (username == owner)
+		{
+			cout << "As the owner of this object, would you like to reset the "
+				 << "ACL to the default? [y/N]" << endl;
+			string response = "";
+			cin >> response;
+			if (response.length() > 0 && tolower(response[0]) == 'y')
+				thisObject.setACL(owner + ".*" + GROUP_DELIMITER + DEFAULT_PERMISSIONS + '\n');
+			cout << "ACL reset to default." << endl;
+		}
 		return 1;
 	}
 }

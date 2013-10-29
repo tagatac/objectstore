@@ -10,8 +10,10 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/regex.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
@@ -27,12 +29,6 @@ Object::Object(string o, string f)
 	if (owner != ACL_MANAGER)
 	{
 		ACL = new Object(ACL_MANAGER, owner + OWNER_DELIMITER + filename);
-
-		// If the file doesn't yet exist, create a default ACL for it
-		if (!exists() && !ACL->exists())
-		{
-			ACL->put(owner + ".*" + GROUP_DELIMITER + DEFAULT_PERMISSIONS + '\n');
-		}
 	}
 }
 
@@ -43,6 +39,12 @@ bool Object::exists()
 
 int Object::put(string contents)
 {
+	// If the file doesn't yet exist, create a default ACL for it
+	if (owner != ACL_MANAGER && !exists() && !ACL->exists())
+	{
+		ACL->put(owner + ".*" + GROUP_DELIMITER + DEFAULT_PERMISSIONS + '\n');
+	}
+
 	// Create the directory tree down to the user's directory
 	fs::path objdir(DATA_DIR);
 	objdir /= owner;
@@ -74,7 +76,70 @@ int Object::get(string &contents)
 
 int Object::setACL(string contents)
 {
-	return ACL->put(contents);
+	fs::path userfilepath(USERFILE);
+	string userfileline;
+	string validusers[MAX_USERS];
+	int counter = 0;
+
+	// Open the userfile.
+	fs::ifstream userfilestream(userfilepath);
+	if (!userfilestream)
+	{
+		cerr << "Invalid userfile!" << endl;
+		return false;
+	}
+	// Extract all of the valid users from the userfile.
+	while (getline(userfilestream, userfileline))
+	{
+		size_t cursor = userfileline.find(USERFILE_DELIMITER);
+		validusers[counter] = userfileline.substr(0, cursor);
+		counter++;
+	}
+
+	string aclline;
+	istringstream ss(contents);
+	static const boost::regex permissionsExpr("r?w?x?p?v?");
+	bool aclvalidity = true;
+	while (getline(ss, aclline))
+	{
+		// First validate the user.
+		size_t cursor1 = aclline.find(USER_DELIMITER);
+		if (cursor1 == string::npos)
+		{
+			aclvalidity = false;
+			break;
+		}
+		string user = aclline.substr(0, cursor1);
+		if (user != "*" && find(begin(validusers), end(validusers), user) == end(validusers))
+		{
+			aclvalidity = false;
+			break;
+		}
+		// If the user is valid, validate the group.
+		int cursor2 = aclline.find(GROUP_DELIMITER);
+		if (cursor2 == string::npos)
+		{
+			aclvalidity = false;
+			break;
+		}
+		string group = aclline.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
+		// If the user and the group match, use these permissions.
+		string permissions = aclline.substr(cursor2 + 1);
+		if (!regex_match(permissions, permissionsExpr))
+		{
+			aclvalidity = false;
+			break;
+		}
+	}
+
+	if (!aclvalidity)
+	{
+		cerr << "Invalid ACL format" << endl;
+		cerr << "Valid format is one or more lines of '<user>.<group>\\t[r][w][x][p][v]\\n'" << endl;
+		return 1;
+	}
+	else
+		return ACL->put(contents);
 }
 
 int Object::getACL(string &contents)
@@ -84,7 +149,11 @@ int Object::getACL(string &contents)
 
 bool Object::testACL(string username, string groupname, char access)
 {
-	if (username == ACL_MANAGER) return true;
+	if (!ACL->exists())
+	{
+		if (username == owner) return true;
+		else return false;
+	}
 
 	string permissions = ""; // Give no permissions by default.
 	string contents, aclline;

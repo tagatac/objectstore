@@ -50,7 +50,7 @@ bool userfileTest(string username, string groupname)
 	fs::path userfilepath(USERFILE);
 	string userfileline;
 
-	// Open the userfile
+	// Open the userfile.
 	fs::ifstream userfilestream(userfilepath);
 	if (!userfilestream)
 	{
