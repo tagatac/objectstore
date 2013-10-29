@@ -2,7 +2,7 @@ homework_number = 1
 compile = c++
 executables = objput objget objlist objsetacl objgetacl objtestacl
 executable_dependencies = common.o Object.o RegexConstraint.o
-flags = -Wall
+flags = -Wall -std=c++0x
 boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
 tclap_version = tclap-1.2.1
 gtest_version = gtest-1.7.0

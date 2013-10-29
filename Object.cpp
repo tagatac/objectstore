@@ -10,7 +10,6 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <algorithm>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/regex.hpp>
