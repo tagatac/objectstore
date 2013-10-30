@@ -46,9 +46,19 @@ gtest : $(gtest_version).zip
 	mv -v $(gtest_version) $@
 	cd $@; ./configure --prefix=$(prefix); make -i; make -i install
 
-.PHONY : build test exec clean cleanstore cleanlibs archive
+.PHONY : build test install exec clean cleanstore cleanlibs archive
 test : cleanstore tester
 	./tester
+install : build
+	echo "Password"
+	sudo rm -vrf /var/local/objectstore
+	sudo mkdir -vp /var/local/objectstore/data
+	sudo chmod -v g-s /var/local/objectstore/data
+	sudo chmod -v 700 /var/local/objectstore/data
+	sudo cp -v $(executables) /var/local/objectstore
+	sudo chmod -v 711 /var/local/objectstore/obj*
+	sudo chown -v tinyvm /var/local/objectstore/*
+	sudo find /var/local/objectstore -type f -exec chmod -v u+s {} \;
 exec : build
 	@read -p "Please enter the command to run: " command; \
 	./$$command
