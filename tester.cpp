@@ -24,8 +24,8 @@ namespace fs = boost::filesystem;
 #define TEST_FILE "newfile"
 #define TEST_FILE1 "1000+newfile1"
 #define TEST_CONTENTS "This is test file content.\n"
-#define TEST_ACL "1002.1002\trwxpv\n1000.1000\trxv\n"
-#define BAD_ACL1 "1001.*\trw\n"
+#define TEST_ACL "1002.1002\trxpv\n1000.1000\trxv\n"
+#define BAD_ACL1 "1005.*\trw\n"
 #define BAD_ACL2 "1002.1002 rwxpv\n"
 
 class ParseObjnameTest : public ::testing::Test
