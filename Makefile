@@ -23,7 +23,7 @@ objgetacl : objgetacl.cpp $(executable_dependencies)
 objtestacl : objtestacl.cpp $(executable_dependencies)
 	$(compile) $(flags) -I include -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
 tester : tester.o $(executable_dependencies)
-	$(compile) $(flags) -I include -o $@ $@.o $(executable_dependencies) $(boost_libraries) lib/libgtest.a
+	$(compile) $(flags) -I include -o $@ $@.o $(executable_dependencies) $(boost_libraries) -l pthread lib/libgtest.a
 
 common.o : common.cpp common.h RegexConstraint.h tclap
 	$(compile) $(flags) -I include -c common.cpp

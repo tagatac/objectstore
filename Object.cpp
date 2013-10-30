@@ -115,7 +115,7 @@ int Object::setACL(string contents)
 			break;
 		}
 		// If the user is valid, validate the group.
-		int cursor2 = aclline.find(GROUP_DELIMITER);
+		size_t cursor2 = aclline.find(GROUP_DELIMITER);
 		if (cursor2 == string::npos)
 		{
 			aclvalidity = false;
