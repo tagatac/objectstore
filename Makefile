@@ -1,7 +1,6 @@
 homework_number = 1
 compile = c++
-#executables = objput objget objlist objsetacl objgetacl objtestacl
-executables = objget
+executables = objput objget objlist objsetacl objgetacl objtestacl
 executable_dependencies = common.o Object.o RegexConstraint.o
 flags = -Wall -std=c++0x
 boost_libraries = -l boost_system -l boost_filesystem -l boost_regex

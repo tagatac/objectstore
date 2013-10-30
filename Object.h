@@ -11,7 +11,7 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
-#define ACL_MANAGER "data-acl"
+#define ACL_MANAGER "acls"
 #define DATA_DIR "data"
 #define DEFAULT_PERMISSIONS "rwxpv"
 #define USER_DELIMITER '.'

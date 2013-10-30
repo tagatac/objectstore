@@ -13,13 +13,13 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	string username, groupname, objname, owner, filename;
+	string objname, owner, filename;
 	string desc = "objgetacl - Writes an object's ACL to stdout.";
-	defaultCmdLine(username, groupname, objname, desc, argc, argv);
+	defaultCmdLine(objname, desc, argc, argv);
 
-	parseObjname(username, objname, owner, filename);
+	parseObjname(objname, owner, filename);
 	Object thisObject(owner, filename);
-	if (userfileTest(username, groupname) && thisObject.testACL(username, groupname, 'v'))
+	if (thisObject.testACL('v'))
 	{
 		string contents;
 		int retval;
@@ -29,8 +29,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		cerr << "User '" << username
-			 << "' does not have permission to get the ACL for object '"
+		cerr << "You do not have permission to get the ACL for object '"
 			 << objname << "'." << endl;
 		return 1;
 	}

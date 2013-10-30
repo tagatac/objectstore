@@ -16,7 +16,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	string username, groupname, objname, owner, filename, accesses;
+	string objname, owner, filename, accesses;
 
 	// parse the commandline with TCLAP
 	try
@@ -26,21 +26,11 @@ int main(int argc, char *argv[])
 		TCLAP::ValueArg<string> accessArg("a", "access",
 				"Access required", true, "", &accessConstraint);
 		cmd.add(accessArg);
-		RegexConstraint groupnameConstraint("groupname");
-		TCLAP::ValueArg<string> groupnameArg("g", "groupname",
-				"Group name", true, "", &groupnameConstraint);
-		cmd.add(groupnameArg);
-		RegexConstraint usernameConstraint("username");
-		TCLAP::ValueArg<string> usernameArg("u", "username",
-				"User's name", true, "", &usernameConstraint);
-		cmd.add(usernameArg);
 		RegexConstraint objnameConstraint("objname", OBJNAME_REGEX);
 		TCLAP::UnlabeledValueArg<std::string> objnameArg("objname",
 				"Object name", true, "", &objnameConstraint);
 		cmd.add(objnameArg);
 		cmd.parse(argc, argv);
-		username = usernameArg.getValue();
-		groupname = groupnameArg.getValue();
 		accesses = accessArg.getValue();
 		objname = objnameArg.getValue();
 	}
@@ -49,11 +39,8 @@ int main(int argc, char *argv[])
 		cerr << "error: " << e.error() << " for arg " << e.argId() << endl;
 	}
 
-	parseObjname(username, objname, owner, filename);
+	parseObjname(objname, owner, filename);
 	Object thisObject(owner, filename);
-	// Check that the user belongs to the group.
-	if (!userfileTest(username, groupname))
-		return 1;
 	// Check that the object is in the object store.
 	if (!thisObject.exists())
 	{
@@ -66,7 +53,7 @@ int main(int argc, char *argv[])
 	 * the access tests fail.
 	 */
 	for(unsigned int i=0; i<accesses.length(); i++)
-		if (!thisObject.testACL(username, groupname, accesses.at(i)))
+		if (!thisObject.testACL(accesses.at(i)))
 		{
 			cout << "denied" << endl;
 			return 0;

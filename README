@@ -1,26 +1,9 @@
-objput reads the contents of the object from stdin; objget writes the contents
-of a retrieved object to stdout.  objlist lists all of the objects belonging to
-the specified user; if the -l option is given (and options can appear in any
-order), all metadata associated with the object is displayed as well.  The
-objsetacl command reads an ACL from stdin.  The objgetacl command writes an
-object's ACL to stdout.  objtestacl tests file permissions; it outputs the
-single word "allowed" or "denied".
-
-The arguments are as follows:
-
-	objput -u username objname
-	objget -u username objname
-	objlist -u username [-l]
-	objsetacl -u username -g groupname objname
-	objgetacl -u username -g groupname objname
-	objtestacl -u username -g groupname -a access objname
-
+Comments on Usage
+=================
+* Other users' objects are accessed with the format
+	<UID of other user>+<objname>.
 
 Assumptions
 ===========
-1) Anyone with access to the objtestacl command is allowed to know the contents
+* Anyone with access to the objtestacl command is allowed to know the contents
 	of all ACLs.
-2) An ACL line specifying no access will still have a tab following the user and
-	group names.
-3) Anyone with access to the objlist command is allowed to know the filenames
-	of all objects stored.

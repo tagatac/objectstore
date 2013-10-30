@@ -10,14 +10,16 @@
 #include <iostream>
 #include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
 /* Writes to stdout a list of user username's files.  If the metadata flag is
  * set, the size of each file is also written to stdout.
  */
-int listObjects(string username, bool metadata)
+int listObjects(bool metadata)
 {
+	string username = boost::lexical_cast<string>(getuid());
 	fs::path userpath = fs::current_path();
 	userpath /= "data";
 	userpath /= username;
@@ -50,7 +52,6 @@ int listObjects(string username, bool metadata)
 
 int main(int argc, char *argv[])
 {
-	string username;
 	bool metadata;
 
 	// parse the commandline with TCLAP
@@ -58,11 +59,7 @@ int main(int argc, char *argv[])
 	{
 		TCLAP::CmdLine cmd("objlist - Lists all of the objects belonging to the specified user.", ' ');
 		TCLAP::SwitchArg metadataSwitch("l", "long", "Use a long listing format", cmd, false);
-		RegexConstraint usernameConstraint("username");
-		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name", true, "", &usernameConstraint);
-		cmd.add(usernameArg);
 		cmd.parse(argc, argv);
-		username = usernameArg.getValue();
 		metadata = metadataSwitch.getValue();
 	}
 	catch (TCLAP::ArgException &e)
@@ -70,5 +67,5 @@ int main(int argc, char *argv[])
 		cerr << "error: " << e.error() << " for arg " << e.argId() << endl;
 	}
 
-	return listObjects(username, metadata);
+	return listObjects(metadata);
 }
