@@ -1,4 +1,4 @@
-homework_number = 1
+homework_number = 2
 compile = c++
 executables = objput objget objlist objsetacl objgetacl objtestacl
 executable_dependencies = common.o Object.o RegexConstraint.o
