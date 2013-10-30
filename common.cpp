@@ -11,32 +11,21 @@
 #include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/lexical_cast.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
-void defaultCmdLine(string &username, string &groupname,
-		    string &objname, string desc, int argc,
-		    char *argv[])
+void defaultCmdLine(string &objname, string desc, int argc, char *argv[])
 {
 	try
 	{
 		TCLAP::CmdLine cmd(desc, ' ');
-		RegexConstraint groupnameConstraint("groupname");
-		TCLAP::ValueArg<string> groupnameArg("g", "groupname", "Group name",
-											 true, "", &groupnameConstraint);
-		cmd.add(groupnameArg);
-		RegexConstraint usernameConstraint("username");
-		TCLAP::ValueArg<string> usernameArg("u", "username", "User's name",
-											true, "", &usernameConstraint);
-		cmd.add(usernameArg);
 		RegexConstraint objnameConstraint("objname", OBJNAME_REGEX);
 		TCLAP::UnlabeledValueArg<string> objnameArg("objname", "Object name",
 													true, "",
 													&objnameConstraint);
 		cmd.add(objnameArg);
 		cmd.parse(argc, argv);
-		username = usernameArg.getValue();
-		groupname = groupnameArg.getValue();
 		objname = objnameArg.getValue();
 	}
 	catch (TCLAP::ArgException &e)
@@ -85,8 +74,9 @@ bool userfileTest(string username, string groupname)
 	return false;
 }
 
-void parseObjname(string username, string objname, string &owner, string &filename)
+void parseObjname(string objname, string &owner, string &filename)
 {
+	string username = boost::lexical_cast<string>(getuid());
 	size_t pos = objname.find(OWNER_DELIMITER);
 	if (pos == string::npos)
 	{ // delimiter not found -> whole objname is the filename

@@ -13,6 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/regex.hpp>
+#include <boost/lexical_cast.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
@@ -146,8 +147,10 @@ int Object::getACL(string &contents)
 	return ACL->get(contents);
 }
 
-bool Object::testACL(string username, string groupname, char access)
+bool Object::testACL(char access)
 {
+	string username = boost::lexical_cast<string>(getuid());
+	string groupname = boost::lexical_cast<string>(getgid());
 	if (!ACL->exists())
 	{
 		if (username == owner) return true;

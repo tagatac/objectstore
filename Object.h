@@ -39,11 +39,11 @@ public:
 	 * with its contents.
 	 */
 	int getACL(std::string &);
-	/* Returns true if the given user (first string) has the
+	/* Returns true if the calling user has the
 	 * read|write|execute|permissions|view access specified by the given
-	 * character as a member of the given group (second string)
+	 * character
 	 */
-	bool testACL(std::string, std::string, char);
+	bool testACL(char);
 
 private:
 	std::string owner, filename;

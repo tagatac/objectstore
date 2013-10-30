@@ -13,13 +13,14 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	string username, groupname, objname, owner, filename;
-	string desc = "objget - Writes the contents of a retrieved object to stdout.";
-	defaultCmdLine(username, groupname, objname, desc, argc, argv);
+	string objname, owner, filename;
 
-	parseObjname(username, objname, owner, filename);
+	string desc = "objget - Writes the contents of a retrieved object to stdout.";
+	defaultCmdLine(objname, desc, argc, argv);
+
+	parseObjname(objname, owner, filename);
 	Object thisObject(owner, filename);
-	if (userfileTest(username, groupname) && thisObject.testACL(username, groupname, 'r'))
+	if (thisObject.testACL('r'))
 	{
 		string contents;
 		int retval;
@@ -29,8 +30,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		cerr << "User '" << username
-			 << "' does not have permission to get object '" << objname << "'."
+		cerr << "You do not have permission to get object '" << objname << "'."
 			 << endl;
 		return 1;
 	}

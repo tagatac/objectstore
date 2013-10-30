@@ -18,8 +18,7 @@
 /* Parse the most common syntax commandline with TCLAP
  * (-u username -g groupname objname)
  */
-void defaultCmdLine(std::string &, std::string &, std::string &, std::string, int,
-					char *[]);
+void defaultCmdLine(std::string &, std::string, int, char *[]);
 
 /* Returns true if user (first string) belongs to group (second string).  Prints
  * an error message in addition to returning false if not.
@@ -27,6 +26,6 @@ void defaultCmdLine(std::string &, std::string &, std::string &, std::string, in
 bool userfileTest(std::string, std::string);
 
 // Parse owner name out of objname on '+' if necessary
-void parseObjname(std::string, std::string, std::string &, std::string &);
+void parseObjname(std::string, std::string &, std::string &);
 
 #endif /* COMMON_H_ */
