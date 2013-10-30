@@ -12,37 +12,28 @@
 #include <sstream>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/lexical_cast.hpp>
 using namespace std;
 namespace fs = boost::filesystem;
 
-#define TEST_USERFILE "david student\njill student ta\n"
-#define TEST_USER1 "david"
-#define TEST_USER2 "jill"
-#define TEST_USER3 "georgios"
-#define TEST_GROUP1 "student"
-#define TEST_GROUP2 "ta"
+#define TEST_USER1 "1002"
+#define TEST_USER2 "1000"
+#define TEST_USER3 "1001"
+#define TEST_GROUP1 "1002"
+#define TEST_GROUP2 "1000"
 #define TEST_FILE "newfile"
-#define TEST_FILE1 "jill+newfile1"
+#define TEST_FILE1 "1000+newfile1"
 #define TEST_CONTENTS "This is test file content.\n"
-#define TEST_ACL "david.student\trwxpv\njill.ta\trxv\n"
-#define BAD_ACL1 "georgios.*\trw\n"
-#define BAD_ACL2 "david.student rwxpv\n"
-
-TEST(UserfileTestTest, Belongs)
-{
-	EXPECT_TRUE(userfileTest(TEST_USER1, TEST_GROUP1));
-}
-TEST(UserfileTestTest, DoesNotBelong)
-{
-	EXPECT_FALSE(userfileTest(TEST_USER1, TEST_GROUP2));
-}
+#define TEST_ACL "1002.1002\trwxpv\n1000.1000\trxv\n"
+#define BAD_ACL1 "1001.*\trw\n"
+#define BAD_ACL2 "1002.1002 rwxpv\n"
 
 class ParseObjnameTest : public ::testing::Test
 {
 protected:
 	virtual void SetUp()
 	{
-		username = TEST_USER1;
+		username = boost::lexical_cast<string>(getuid());
 	}
 
 	string username, objname, owner, filename;
@@ -50,14 +41,14 @@ protected:
 TEST_F(ParseObjnameTest, SimpleFilename)
 {
 	objname = TEST_FILE;
-	parseObjname(username, objname, owner, filename);
+	parseObjname(objname, owner, filename);
 	EXPECT_EQ(TEST_FILE, filename);
 	EXPECT_EQ(TEST_USER1, owner);
 }
 TEST_F(ParseObjnameTest, CompoundFilename)
 {
 	objname = (string) TEST_USER2 + OWNER_DELIMITER + TEST_FILE;
-	parseObjname(username, objname, owner, filename);
+	parseObjname(objname, owner, filename);
 	EXPECT_EQ(TEST_FILE, filename);
 	EXPECT_EQ(TEST_USER2, owner);
 }
@@ -128,8 +119,8 @@ TEST_F(ObjectTest, GetACL)
 }
 TEST_F(ObjectTest, testACL)
 {
-	EXPECT_TRUE(object->testACL(TEST_USER1, TEST_GROUP1, 'r'));
-	EXPECT_FALSE(object->testACL(TEST_USER2, TEST_GROUP1, 'w'));
+	EXPECT_TRUE(object->testACL('r'));
+	EXPECT_FALSE(object->testACL('w'));
 }
 
 TEST(ACLTest, NoObject)
@@ -143,13 +134,6 @@ TEST(ACLTest, NoObject)
 
 int main(int argc, char *argv[])
 {
-	// Write the test userfile
-	fs::path userfilepath(USERFILE);
-	string contents = TEST_USERFILE;
-	fs::ofstream userfilestream(userfilepath);
-	userfilestream.write(contents.c_str(), sizeof(char) * contents.size());
-	userfilestream.close();
-
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }

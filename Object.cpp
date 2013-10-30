@@ -76,6 +76,28 @@ int Object::get(string &contents)
 
 int Object::setACL(string contents)
 {
+	fs::path userfilepath(USERFILE);
+	string userfileline;
+	string validusers[MAX_USERS];
+	int counter = 0;
+
+	// Open the userfile.
+	fs::ifstream userfilestream(userfilepath);
+	if (!userfilestream)
+	{
+		cerr << "Invalid userfile!" << endl;
+		return 1;
+	}
+	// Extract all of the valid users from the userfile.
+	while (getline(userfilestream, userfileline))
+	{
+		size_t cursor1 = userfileline.find(USERFILE_DELIMITER);
+		cursor1 = userfileline.find(USERFILE_DELIMITER, cursor1 + 1);
+		size_t cursor2 = userfileline.find(USERFILE_DELIMITER, cursor1 + 1);
+		validusers[counter] = userfileline.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
+		counter++;
+	}
+
 	string aclline;
 	istringstream ss(contents);
 	static const boost::regex permissionsExpr("r?w?x?p?v?");
@@ -89,11 +111,16 @@ int Object::setACL(string contents)
 			aclvalidity = false;
 			break;
 		}
+		string user = aclline.substr(0, cursor1);
+		if (user != "*" && find(begin(validusers), end(validusers), user) == end(validusers))
+		{
+			aclvalidity = false;
+			break;
+		}
 		// If the user is valid, validate the group.
 		size_t cursor2 = aclline.find(GROUP_DELIMITER);
 		if (cursor2 < cursor1 || cursor2 == string::npos)
 		{
-			cerr << "group" << endl;
 			aclvalidity = false;
 			break;
 		}
@@ -101,7 +128,6 @@ int Object::setACL(string contents)
 		string permissions = aclline.substr(cursor2 + 1);
 		if (!regex_match(permissions, permissionsExpr))
 		{
-			cerr << "permissions" << endl;
 			aclvalidity = false;
 			break;
 		}
@@ -110,7 +136,7 @@ int Object::setACL(string contents)
 	if (!aclvalidity)
 	{
 		cerr << "Invalid ACL format" << endl;
-		cerr << "Valid format is one or more lines of '<user>.<group>\\t[r][w][x][p][v]\\n'" << endl;
+		cerr << "Valid format is one or more lines of '<UID>|*.<GID>|*\\t[r][w][x][p][v]\\n'" << endl;
 		return 1;
 	}
 	else
