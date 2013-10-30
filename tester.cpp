@@ -43,7 +43,7 @@ TEST_F(ParseObjnameTest, SimpleFilename)
 	objname = TEST_FILE;
 	parseObjname(objname, owner, filename);
 	EXPECT_EQ(TEST_FILE, filename);
-	EXPECT_EQ(TEST_USER1, owner);
+	EXPECT_EQ(username, owner);
 }
 TEST_F(ParseObjnameTest, CompoundFilename)
 {
