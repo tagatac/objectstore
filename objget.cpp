@@ -13,10 +13,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	string objname, owner, filename;
-
+	string passphrase, objname, owner, filename;
 	string desc = "objget - Writes the contents of a retrieved object to stdout.";
-	defaultCmdLine(objname, desc, argc, argv);
+	authCmdLine(passphrase, objname, desc, argc, argv);
 
 	parseObjname(objname, owner, filename);
 	Object thisObject(owner, filename);

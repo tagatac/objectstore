@@ -16,9 +16,14 @@
 #define OWNER_DELIMITER '+'
 
 /* Parse the most common syntax commandline with TCLAP
- * (-u username -g groupname objname)
+ * (objname)
  */
 void defaultCmdLine(std::string &, std::string, int, char *[]);
+
+/* Parse the second most common syntax commandline with TCLAP
+ * (-k passphrase objname)
+ */
+void authCmdLine(std::string &, std::string &, std::string, int, char *[]);
 
 // Parse owner name out of objname on '+' if necessary
 void parseObjname(std::string, std::string &, std::string &);

@@ -13,9 +13,11 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	string objname, owner, filename;
+	string passphrase, objname, owner, filename;
 	string desc = "objput - Reads data from stdin and stores it in an object.";
-	defaultCmdLine(objname, desc, argc, argv);
+	authCmdLine(passphrase, objname, desc, argc, argv);
+	cout << "passphrase: " << passphrase << endl;
+	return 1;
 
 	parseObjname(objname, owner, filename);
 	Object thisObject(owner, filename);

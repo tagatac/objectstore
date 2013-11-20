@@ -4,30 +4,13 @@ To set up the object store, run `make install` as any user with sudo permissions
 After installation, the empty object store, and all accessor binaries will be
 located at /var/local/objectstore.
 
-Object Store Owner
-==================
-I have chosen to make tinyvm the owner of the object store as opposed to root.
-As the object store can be contained within a user area, there is no need to
-risk exposing root privileges with a setuid program.
-
-Installation Permissions
-========================
-Upon installation, the data directory, which contains the actual object store
-data, is owned by 'tinyvm' with permissions 700.  This ensures that only tinyvm
-can access its contents.  The six obj* executables are also owned by tinyvm with
-permissions 711 and the set UID bit set.  This allows all users to access the
-object store via these six executables.  When the executables are run, they
-assume 'tinyvm's UID as their EUID.  Consequently, they are able to manipulate
-the object store.  However, the lack of other permissions ensures that
-non-root users other than 'tinyvm' are not able to manipulate or copy any of the
-executables or the data.
-
 Comments on Usage
 =================
-* Other users' objects are accessed with the format
-	<UID of other user>+<objname>.
-* ACL's consist of one or more lines of the format
+* Other users' objects are accessed with the format:
+	<UID of other user>+<objname>
+* ACL's consist of one or more lines of the format:
 	<UID>|*.<GID>|*\t[r][w][x][p][v]\n
+* Passphrases may not contain spaces.
 
 Assumptions
 ===========
