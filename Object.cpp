@@ -36,7 +36,9 @@ Object::Object(string o, string f)
 
 bool Object::exists()
 {
+	setuid((unsigned int) getresuid());
 	return fs::exists(objpath);
+	setuid(getuid());
 }
 
 int Object::put(string contents)
@@ -51,11 +53,13 @@ int Object::put(string contents)
 	// Create the directory tree down to the user's directory
 	fs::path objdir(DATA_DIR);
 	objdir /= owner;
+	setuid((unsigned int) getresuid());
 	fs::create_directories(objdir);
 
 	// Transfer the data from the passed string to the file
 	fs::ofstream objectstream(objpath);
 	objectstream.write(contents.c_str(), sizeof(char) * contents.size());
+	setuid(getuid());
 
 	return 0;
 }
@@ -63,6 +67,7 @@ int Object::put(string contents)
 int Object::get(string &contents)
 {
 	// Open the file
+	setuid((unsigned int) getresuid());
 	fs::ifstream objectstream(objpath);
 	if (!objectstream)
 	{
@@ -73,6 +78,7 @@ int Object::get(string &contents)
 	istreambuf_iterator<char> eos;
 	// Put the stream into a string (from http://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring)
 	contents = string(istreambuf_iterator<char>(objectstream), eos);
+	setuid(getuid());
 
 	return 0;
 }
@@ -85,6 +91,7 @@ int Object::setACL(string contents)
 	int counter = 0;
 
 	// Open the userfile.
+	setuid((unsigned int) getresuid());
 	fs::ifstream userfilestream(userfilepath);
 	if (!userfilestream)
 	{
@@ -100,6 +107,7 @@ int Object::setACL(string contents)
 		validusers[counter] = userfileline.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
 		counter++;
 	}
+	setuid(getuid());
 
 	string aclline;
 	istringstream ss(contents);

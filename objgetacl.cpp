@@ -13,6 +13,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+	setuid(getuid());
 	string objname, owner, filename;
 	string desc = "objgetacl - Writes an object's ACL to stdout.";
 	defaultCmdLine(objname, desc, argc, argv);

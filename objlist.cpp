@@ -20,6 +20,7 @@ namespace fs = boost::filesystem;
  */
 int listObjects(bool metadata)
 {
+	setuid(getuid());
 	string username = boost::lexical_cast<string>(getuid());
 	fs::path userpath = fs::current_path();
 	userpath /= "data";

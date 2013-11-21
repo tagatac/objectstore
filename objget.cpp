@@ -14,6 +14,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+	setuid(getuid());
 	string passphrase, objname, owner, filename;
 	unsigned char key[AESBLOCK];
 	string desc = "objget - Writes the contents of a retrieved object to stdout.";

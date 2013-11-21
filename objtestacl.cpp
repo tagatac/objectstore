@@ -16,6 +16,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+	setuid(getuid());
 	string objname, owner, filename, accesses;
 
 	// parse the commandline with TCLAP

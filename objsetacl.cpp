@@ -14,6 +14,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+	setuid(getuid());
 	string objname, owner, filename;
 	string desc = "objsetacl - Reads an ACL from stdin and sets it.";
 	defaultCmdLine(objname, desc, argc, argv);
