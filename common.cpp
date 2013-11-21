@@ -64,9 +64,9 @@ void authCmdLine(string &passphrase, string &objname, string desc, int argc, cha
 string hexify(unsigned char *hashedChars)
 {
 	// Method inspired by http://stackoverflow.com/a/14050569
-	char hashedHex[AESBLOCK * 2 + 1];
-	int i;
-	for (i=0; i<AESBLOCK; i++)
+	int i, stringLength = strlen(reinterpret_cast<char *>(hashedChars));
+	char hashedHex[stringLength * 2 + 1];
+	for (i=0; i<stringLength; i++)
 		sprintf(hashedHex + i * 2, "%02x", hashedChars[i]);
 	hashedHex[i*2] = 0;
 	cout << "hashedHex: " << hashedHex << endl;
@@ -77,7 +77,7 @@ void dehexify(string hexString, unsigned char *dehexedString)
 {
 	// Method inspired by http://stackoverflow.com/a/13344256
 	int i;
-	for (i=0; i<AESBLOCK; i++)
+	for (i=0; i<hexString.length(); i++)
 		dehexedString[i] = (char) stoi(hexString.substr(i*2, 2), NULL, 16);
 	dehexedString[i] = 0;
 }

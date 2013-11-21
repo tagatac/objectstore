@@ -27,6 +27,7 @@ namespace fs = boost::filesystem;
 #define TEST_ACL "1002.1002\trxpv\n1000.1000\trxv\n"
 #define BAD_ACL1 "1005.*\trw\n"
 #define BAD_ACL2 "1002.1002 rwxpv\n"
+#define TEST_FILE_HEX "6e657766696c65"
 
 class ParseObjnameTest : public ::testing::Test
 {
@@ -117,7 +118,7 @@ TEST_F(ObjectTest, GetACL)
 	object->getACL(contents);
 	EXPECT_EQ(TEST_ACL, contents);
 }
-TEST_F(ObjectTest, testACL)
+TEST_F(ObjectTest, TestACL)
 {
 	EXPECT_TRUE(object->testACL('r'));
 	EXPECT_FALSE(object->testACL('w'));
@@ -140,6 +141,13 @@ protected:
 
 	}
 };
+TEST_F(CryptoTest, Hexify)
+{
+	EXPECT_EQ(hexify(reinterpret_cast<unsigned char *>(const_cast<char *>(TEST_FILE))), TEST_FILE_HEX);
+	unsigned char dehexed_filename[strlen(TEST_FILE)];
+	dehexify(TEST_FILE_HEX, dehexed_filename);
+	EXPECT_EQ(reinterpret_cast<char *>(dehexed_filename), TEST_FILE);
+}
 
 int main(int argc, char *argv[])
 {
