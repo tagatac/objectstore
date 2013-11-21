@@ -69,7 +69,6 @@ string hexify(unsigned char *hashedChars)
 	for (i=0; i<stringLength; i++)
 		sprintf(hashedHex + i * 2, "%02x", hashedChars[i]);
 	hashedHex[i*2] = 0;
-	cout << "hashedHex: " << hashedHex << endl;
 	return hashedHex;
 }
 
@@ -77,7 +76,7 @@ void dehexify(string hexString, unsigned char *dehexedString)
 {
 	// Method inspired by http://stackoverflow.com/a/13344256
 	int i;
-	for (i=0; i<hexString.length(); i++)
+	for (i=0; i<hexString.length()/2; i++)
 		dehexedString[i] = (char) stoi(hexString.substr(i*2, 2), NULL, 16);
 	dehexedString[i] = 0;
 }
