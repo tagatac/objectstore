@@ -21,3 +21,7 @@ Assumptions
 	access is restricted to running the binaries for other non-root users.
 * Usernames 'acls' and 'metadata' are disallowed.
 
+Overwrite Handling
+==================
+Overwriting is allowed based on the ACL only.  When an overwrite occurs, a new
+passphrase is obtained, and a new IV is generated.
