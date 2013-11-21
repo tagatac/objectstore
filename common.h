@@ -30,6 +30,9 @@ void authCmdLine(std::string &, std::string &, std::string, int, char *[]);
 // Convert MD5 hash of passphrase to a hex string (for storage)
 std::string hexify(unsigned char *);
 
+// Convert hex string to ASCII string
+void dehexify(std::string, unsigned char *);
+
 // Parse owner name out of objname on '+' if necessary
 void parseObjname(std::string, std::string &, std::string &);
 

@@ -209,7 +209,7 @@ string Object::getKey()
 	return key;
 }
 
-int Object::getSize()
+string Object::getSize()
 {
 	string metaContents, size;
 	metadata->get(metaContents);
@@ -217,5 +217,5 @@ int Object::getSize()
 	cursor1 = metaContents.find(META_DELIMITER, cursor1 + 1);
 	size_t cursor2 = metaContents.find(META_DELIMITER, cursor1 + 1);
 	size = metaContents.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
-	return atoi(size.c_str());
+	return size;
 }

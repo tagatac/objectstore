@@ -168,7 +168,7 @@ string decrypt(string ciphertextString, Object *thisObject)
 	OpenSSL_add_all_algorithms();
 	OPENSSL_config(NULL);
 
-	// Do the encryption - largely copied from
+	// Do the decryption - largely copied from
 	// http://wiki.openssl.org/index.php/EVP_Symmetric_Encryption_and_Decryption
 	EVP_CIPHER_CTX *ctx;
 	if (!(ctx = EVP_CIPHER_CTX_new()))

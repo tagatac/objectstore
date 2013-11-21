@@ -52,7 +52,7 @@ public:
 	// Returns the IV (hex) from the metadata file
 	std::string getIV();
 	// Returns the plaintext filesize from the metadata file
-	int getSize();
+	std::string getSize();
 
 private:
 	std::string owner, filename;

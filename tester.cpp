@@ -132,6 +132,15 @@ TEST(ACLTest, NoObject)
 	EXPECT_FALSE(fs::exists(aclpath));
 }
 
+class CryptoTest : public ::testing::Test
+{
+protected:
+	virtual void SetUp()
+	{
+
+	}
+};
+
 int main(int argc, char *argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);

@@ -5,6 +5,7 @@
  *      Author: David Tagatac
  */
 
+#include "Object.h"
 #include "RegexConstraint.h"
 #include <string>
 #include <iostream>
@@ -23,6 +24,7 @@ int listObjects(bool metadata)
 	fs::path userpath = fs::current_path();
 	userpath /= "data";
 	userpath /= username;
+	Object *thisObject;
 
 	/* Code for iterating through the directory contents mostly taken from
 	 * http://www.boost.org/doc/libs/1_54_0/libs/filesystem/example/simple_ls.cpp
@@ -41,8 +43,10 @@ int listObjects(bool metadata)
 		     dir_itr != end_iter; ++dir_itr)
 		{
 			if (metadata)
-				cout << '(' << fs::file_size(dir_itr->path())
-				     << "B) ";
+			{
+				thisObject = new Object(username, dir_itr->path().filename().string());
+				cout << '(' << thisObject->getSize() << "B) ";
+			}
 			cout << dir_itr->path().filename().string() << endl;
 		}
 	}
