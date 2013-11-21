@@ -6,6 +6,7 @@ located at /var/local/objectstore.
 
 Comments on Usage
 =================
+* Commands must be run from /var/local/objectstore.
 * Other users' objects are accessed with the format:
 	<UID of other user>+<objname>
 * ACL's consist of one or more lines of the format:

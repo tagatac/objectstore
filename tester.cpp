@@ -13,6 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/lexical_cast.hpp>
+#include <openssl/md5.h>
 using namespace std;
 namespace fs = boost::filesystem;
 
@@ -28,6 +29,9 @@ namespace fs = boost::filesystem;
 #define BAD_ACL1 "1005.*\trw\n"
 #define BAD_ACL2 "1002.1002 rwxpv\n"
 #define TEST_FILE_HEX "6e657766696c65"
+#define TEST_KEY reinterpret_cast<unsigned char *>(const_cast<char *>("912ec803b2ce49e4a541068d495ab570"))
+#define TEST_CONTENTS_ENC "f8723ff414de93c19b814592c8c4cf0e56f1ead913a130f495edf7d7d810ab3e"
+#define TEST_PASSPHRASE "asdf"
 
 class ParseObjnameTest : public ::testing::Test
 {
@@ -138,15 +142,26 @@ class CryptoTest : public ::testing::Test
 protected:
 	virtual void SetUp()
 	{
-
+		o = new Object("test", "test");
+		MD5(reinterpret_cast<unsigned char *>(const_cast<char *>(TEST_PASSPHRASE)),
+				  strlen(TEST_PASSPHRASE), key);
 	}
+
+	Object *o;
+	unsigned char key[AESBLOCK];
 };
 TEST_F(CryptoTest, Hexify)
 {
-	EXPECT_EQ(hexify(reinterpret_cast<unsigned char *>(const_cast<char *>(TEST_FILE))), TEST_FILE_HEX);
+	EXPECT_EQ(TEST_FILE_HEX, hexify(reinterpret_cast<unsigned char *>(const_cast<char *>(TEST_FILE))));
 	unsigned char dehexed_filename[strlen(TEST_FILE)];
 	dehexify(TEST_FILE_HEX, dehexed_filename);
-	EXPECT_EQ(reinterpret_cast<char *>(dehexed_filename), TEST_FILE);
+	EXPECT_EQ(TEST_FILE, (string) const_cast<const char *>(reinterpret_cast<char *>(dehexed_filename)));
+}
+TEST_F(CryptoTest, Encrypt)
+{
+	string encryptedContents = encrypt(TEST_CONTENTS, key, o->metadata);
+	unsigned char contents[strlen(TEST_CONTENTS)];
+	EXPECT_EQ(TEST_CONTENTS, decrypt(encryptedContents, o));
 }
 
 int main(int argc, char *argv[])
