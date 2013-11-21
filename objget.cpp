@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
 	parseObjname(objname, owner, filename);
 	Object thisObject(owner, filename);
-	if (thisObject.testACL('r'))
+	if (thisObject.testACL('r') && testPass(passphrase, &thisObject))
 	{
 		string contents;
 		int retval;

@@ -3,7 +3,7 @@ compile = c++
 executables = objput objget objlist objsetacl objgetacl objtestacl
 executable_dependencies = common.o Object.o RegexConstraint.o
 flags = -Wall -std=c++0x
-boost_libraries = -l boost_system -l boost_filesystem -l boost_regex
+libraries = -l boost_system -l boost_filesystem -l boost_regex -l crypto
 tclap_version = tclap-1.2.1
 gtest_version = gtest-1.7.0
 prefix = '$(shell pwd)'
@@ -11,21 +11,21 @@ prefix = '$(shell pwd)'
 build : $(executables)
 
 objput : objput.cpp $(executable_dependencies)
-	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(libraries)
 objget : objget.cpp $(executable_dependencies)
-	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(libraries)
 objlist : objlist.cpp RegexConstraint.o
-	$(compile) $(flags) -I include -o $@ $@.cpp RegexConstraint.o $(boost_libraries)
+	$(compile) $(flags) -I include -o $@ $@.cpp RegexConstraint.o $(libraries)
 objsetacl : objsetacl.cpp $(executable_dependencies)
-	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(libraries)
 objgetacl : objgetacl.cpp $(executable_dependencies)
-	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+	$(compile) $(flags) -o $@ $@.cpp $(executable_dependencies) $(libraries)
 objtestacl : objtestacl.cpp $(executable_dependencies)
-	$(compile) $(flags) -I include -o $@ $@.cpp $(executable_dependencies) $(boost_libraries)
+	$(compile) $(flags) -I include -o $@ $@.cpp $(executable_dependencies) $(libraries)
 tester : tester.o $(executable_dependencies)
-	$(compile) $(flags) -I include -o $@ $@.o $(executable_dependencies) $(boost_libraries) -l pthread lib/libgtest.a
+	$(compile) $(flags) -I include -o $@ $@.o $(executable_dependencies) $(libraries) -l pthread lib/libgtest.a
 
-common.o : common.cpp common.h RegexConstraint.h tclap
+common.o : common.cpp common.h Object.h RegexConstraint.h tclap
 	$(compile) $(flags) -I include -c common.cpp
 Object.o : Object.cpp Object.h common.h
 	$(compile) $(flags) -c Object.cpp

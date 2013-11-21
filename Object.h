@@ -12,11 +12,13 @@
 #include <boost/filesystem.hpp>
 
 #define ACL_MANAGER "acls"
+#define METADATA_MANAGER "metadata"
 #define DATA_DIR "data"
 #define DEFAULT_PERMISSIONS "rwxpv"
 #define USER_DELIMITER '.'
 #define GROUP_DELIMITER '\t'
 #define MAX_USERS 1024
+#define META_DELIMITER '\n'
 
 /* Represents an object stored (or to-be-stored) in the object store. Provides
  * methods to store and retrieve objects and ACL details of those objects.
@@ -44,6 +46,13 @@ public:
 	 * character
 	 */
 	bool testACL(char);
+	Object *metadata;
+	// Returns the key (hex) from the metadata file
+	std::string getKey();
+	// Returns the IV (hex) from the metadata file
+	std::string getIV();
+	// Returns the plaintext filesize from the metadata file
+	int getSize();
 
 private:
 	std::string owner, filename;

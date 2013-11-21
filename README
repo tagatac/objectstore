@@ -18,3 +18,5 @@ Assumptions
 	of all ACLs.
 * The user 'tinyvm' has full access to the source code and the object store;
 	access is restricted to running the binaries for other non-root users.
+* Usernames 'acls' and 'metadata' are disallowed.
+
