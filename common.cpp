@@ -150,7 +150,7 @@ string encrypt(string plaintextString, unsigned char *key, Object *metadata)
 	ERR_free_strings();
 
 	ciphertext[ciphertext_len] = '\0';
-	string ciphertextString(reinterpret_cast<const char *>(ciphertext), ciphertext_len);
+	string ciphertextString(reinterpret_cast<char *>(ciphertext), ciphertext_len);
 	return ciphertextString;
 }
 
