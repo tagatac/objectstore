@@ -9,21 +9,25 @@
 #include "Object.h"
 #include <string>
 #include <iostream>
+#include <openssl/md5.h>
 using namespace std;
 
 int main(int argc, char *argv[])
 {
 	string passphrase, objname, owner, filename;
+	unsigned char key[AESBLOCK];
 	string desc = "objget - Writes the contents of a retrieved object to stdout.";
 	authCmdLine(passphrase, objname, desc, argc, argv);
-
+	MD5(reinterpret_cast<unsigned char *>(const_cast<char *>(passphrase.c_str())),
+					passphrase.length(), key);
 	parseObjname(objname, owner, filename);
 	Object thisObject(owner, filename);
-	if (thisObject.testACL('r') && testPass(passphrase, &thisObject))
+	if (thisObject.testACL('r') && testKey(key, &thisObject))
 	{
-		string contents;
+		string contents, encryptedContents;
 		int retval;
-		if (!(retval = thisObject.get(contents)))
+		if (!(retval = thisObject.get(encryptedContents)))
+			contents = decrypt(encryptedContents, &thisObject);
 			cout << contents << endl;
 		return retval;
 	}

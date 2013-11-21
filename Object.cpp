@@ -192,19 +192,30 @@ bool Object::testACL(char access)
 
 string Object::getIV()
 {
-	string metaContents, iv, metaline;
+	string metaContents, iv;
 	metadata->get(metaContents);
 	size_t cursor = metaContents.find(META_DELIMITER);
-	iv = metaContents.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
-	return key;
+	iv = metaContents.substr(0, cursor);
+	return iv;
 }
 
 string Object::getKey()
 {
-	string metaContents, key, metaline;
+	string metaContents, key;
 	metadata->get(metaContents);
 	size_t cursor1 = metaContents.find(META_DELIMITER);
 	size_t cursor2 = metaContents.find(META_DELIMITER, cursor1 + 1);
 	key = metaContents.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
 	return key;
+}
+
+int Object::getSize()
+{
+	string metaContents, size;
+	metadata->get(metaContents);
+	size_t cursor1 = metaContents.find(META_DELIMITER);
+	cursor1 = metaContents.find(META_DELIMITER, cursor1 + 1);
+	size_t cursor2 = metaContents.find(META_DELIMITER, cursor1 + 1);
+	size = metaContents.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
+	return atoi(size.c_str());
 }

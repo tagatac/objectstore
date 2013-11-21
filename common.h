@@ -40,6 +40,6 @@ std::string encrypt(std::string, unsigned char *, Object *);
 std::string decrypt(std::string, Object *);
 
 // Test if the supplied passphrase is correct
-bool testPass(std:string, Object *);
+bool testKey(unsigned char *, Object *);
 
 #endif /* COMMON_H_ */
