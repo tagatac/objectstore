@@ -75,7 +75,7 @@ string hexify(unsigned char *hashedChars)
 void dehexify(string hexString, unsigned char *dehexedString)
 {
 	// Method inspired by http://stackoverflow.com/a/13344256
-	int i;
+	unsigned int i;
 	for (i=0; i<hexString.length()/2; i++)
 		dehexedString[i] = (char) stoi(hexString.substr(i*2, 2), NULL, 16);
 	dehexedString[i] = 0;

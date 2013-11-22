@@ -88,8 +88,12 @@ TEST_F(ObjectTest, PreExists)
 TEST_F(ObjectTest, Put)
 {
 	object->put(TEST_CONTENTS);
+	uid_t ruid, euid, suid;
+	getresuid(&ruid, &euid, &suid);
+	setuid(suid);
 	fs::ifstream objectstream(objpath);
 	contents = string(istreambuf_iterator<char>(objectstream), eos);
+	setuid(ruid);
 	EXPECT_EQ(TEST_CONTENTS, contents);
 }
 TEST_F(ObjectTest, Exists)
@@ -104,16 +108,22 @@ TEST_F(ObjectTest, Get)
 TEST_F(ObjectTest, SetACL)
 {
 	object->setACL(TEST_ACL);
+	uid_t ruid, euid, suid;
+	getresuid(&ruid, &euid, &suid);
+	setuid(suid);
 	fs::ifstream aclstream(aclpath);
 	contents = string(istreambuf_iterator<char>(aclstream), eos);
 	EXPECT_EQ(TEST_ACL, contents);
 	object->setACL(BAD_ACL1);
+	setuid(suid);
 	fs::ifstream badaclstream1(aclpath);
 	contents = string(istreambuf_iterator<char>(badaclstream1), eos);
 	EXPECT_EQ(TEST_ACL, contents);
 	object->setACL(BAD_ACL2);
+	setuid(suid);
 	fs::ifstream badaclstream2(aclpath);
 	contents = string(istreambuf_iterator<char>(badaclstream2), eos);
+	setuid(ruid);
 	EXPECT_EQ(TEST_ACL, contents);
 }
 TEST_F(ObjectTest, GetACL)
@@ -134,7 +144,11 @@ TEST(ACLTest, NoObject)
 	fs::path aclpath = fs::path(DATA_DIR);
 	aclpath /= ACL_MANAGER;
 	aclpath /= (string) TEST_USER2 + OWNER_DELIMITER + TEST_FILE;
+	uid_t ruid, euid, suid;
+	getresuid(&ruid, &euid, &suid);
+	setuid(suid);
 	EXPECT_FALSE(fs::exists(aclpath));
+	setuid(ruid);
 }
 
 class CryptoTest : public ::testing::Test

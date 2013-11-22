@@ -63,6 +63,7 @@ int Object::put(string contents)
 	// Transfer the data from the passed string to the file
 	fs::ofstream objectstream(objpath);
 	objectstream.write(contents.c_str(), sizeof(char) * contents.size());
+	objectstream.close();
 	setuid(ruid);
 
 	return 0;
