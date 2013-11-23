@@ -8,10 +8,9 @@ Comments on Usage
 =================
 * Commands must be run from /var/local/objectstore.
 * Other users' objects are accessed with the format:
-	<UID of other user>+<objname>
+	<other username>+<objname>
 * ACL's consist of one or more lines of the format:
-	<UID>|*.<GID>|*\t[r][w][x][p][v]\n
-* Passphrases may not contain spaces.
+	<username>|*.<groupname>|*\t[r][w][x][p][v]\n
 
 Assumptions
 ===========

@@ -17,17 +17,17 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
-#define TEST_USER1 "1002"
-#define TEST_USER2 "1000"
-#define TEST_USER3 "1001"
-#define TEST_GROUP1 "1002"
-#define TEST_GROUP2 "1000"
+#define TEST_USER1 "user"
+#define TEST_USER2 "tinyvm"
+#define TEST_USER3 "sidedoor"
+#define TEST_GROUP1 "user"
+#define TEST_GROUP2 "tinyvm"
 #define TEST_FILE "newfile"
-#define TEST_FILE1 "1000+newfile1"
+#define TEST_FILE1 "tinyvm+newfile1"
 #define TEST_CONTENTS "This is test file content.\n"
-#define TEST_ACL "1002.1002\trxpv\n1000.1000\trxv\n"
-#define BAD_ACL1 "1005.*\trw\n"
-#define BAD_ACL2 "1002.1002 rwxpv\n"
+#define TEST_ACL "user.user\trxpv\ntinyvm.tinyvm\trxv\n"
+#define BAD_ACL1 "angela.*\trw\n"
+#define BAD_ACL2 "user.user rwxpv\n"
 #define TEST_FILE_HEX "6e657766696c65"
 #define TEST_KEY reinterpret_cast<unsigned char *>(const_cast<char *>("912ec803b2ce49e4a541068d495ab570"))
 #define TEST_CONTENTS_ENC "f8723ff414de93c19b814592c8c4cf0e56f1ead913a130f495edf7d7d810ab3e"

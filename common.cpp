@@ -83,7 +83,7 @@ void dehexify(string hexString, unsigned char *dehexedString)
 
 void parseObjname(string objname, string &owner, string &filename)
 {
-	string username = boost::lexical_cast<string>(getuid());
+	string username(getpwuid(getuid())->pw_name);
 	size_t pos = objname.find(OWNER_DELIMITER);
 	if (pos == string::npos)
 	{ // delimiter not found -> whole objname is the filename

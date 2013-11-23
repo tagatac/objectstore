@@ -10,6 +10,9 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/regex.hpp>
@@ -92,34 +95,9 @@ int Object::get(string &contents)
 
 int Object::setACL(string contents)
 {
-	fs::path userfilepath(USERFILE);
-	string userfileline;
-	string validusers[MAX_USERS];
-	int counter = 0;
-
-	// Open the userfile.
-	uid_t ruid, euid, suid;
-	getresuid(&ruid, &euid, &suid);
-	setuid(suid);
-	fs::ifstream userfilestream(userfilepath);
-	if (!userfilestream)
-	{
-		cerr << "Invalid userfile!" << endl;
-		return 1;
-	}
-	// Extract all of the valid users from the userfile.
-	while (getline(userfilestream, userfileline))
-	{
-		size_t cursor1 = userfileline.find(USERFILE_DELIMITER);
-		cursor1 = userfileline.find(USERFILE_DELIMITER, cursor1 + 1);
-		size_t cursor2 = userfileline.find(USERFILE_DELIMITER, cursor1 + 1);
-		validusers[counter] = userfileline.substr(cursor1 + 1, cursor2 - (cursor1 + 1));
-		counter++;
-	}
-	setuid(ruid);
-
 	string aclline;
 	istringstream ss(contents);
+
 	static const boost::regex permissionsExpr("r?w?x?p?v?");
 	bool aclvalidity = true;
 	while (getline(ss, aclline))
@@ -132,7 +110,7 @@ int Object::setACL(string contents)
 			break;
 		}
 		string user = aclline.substr(0, cursor1);
-		if (user != "*" && find(begin(validusers), end(validusers), user) == end(validusers))
+		if (user != "*" && !getpwnam(user.c_str()))
 		{
 			aclvalidity = false;
 			break;
@@ -156,7 +134,7 @@ int Object::setACL(string contents)
 	if (!aclvalidity)
 	{
 		cerr << "Invalid ACL format" << endl;
-		cerr << "Valid format is one or more lines of '<UID>|*.<GID>|*\\t[r][w][x][p][v]\\n'" << endl;
+		cerr << "Valid format is one or more lines of '<username>|*.<groupname>|*\\t[r][w][x][p][v]\\n'" << endl;
 		return 1;
 	}
 	else
@@ -170,8 +148,8 @@ int Object::getACL(string &contents)
 
 bool Object::testACL(char access)
 {
-	string username = boost::lexical_cast<string>(getuid());
-	string groupname = boost::lexical_cast<string>(getgid());
+	string username(getpwuid(getuid())->pw_name);
+	string groupname(getgrgid(getgid())->gr_name);
 	if (!ACL->exists())
 	{
 		if (username == owner) return true;
