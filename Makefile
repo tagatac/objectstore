@@ -1,4 +1,4 @@
-homework_number = 3
+homework_number = 4
 compile = c++
 executables = objput objget objlist objsetacl objgetacl objtestacl
 executable_dependencies = common.o Object.o RegexConstraint.o
@@ -59,6 +59,11 @@ install : build
 	sudo chmod -v 711 /var/local/objectstore/obj*
 	sudo chown -v tinyvm /var/local/objectstore/*
 	sudo find /var/local/objectstore -type f -exec chmod -v u+s {} \;
+installtest : install tester
+	sudo cp -v tester /var/local/objectstore
+	sudo chmod -v 711 /var/local/objectstore/tester
+	sudo chown -v tinyvm /var/local/objectstore/tester
+	sudo chmod -v u+s /var/local/objectstore/tester
 exec : build
 	@read -p "Please enter the command to run: " command; \
 	./$$command
