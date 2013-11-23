@@ -8,6 +8,8 @@
 #include "common.h"
 #include "RegexConstraint.h"
 #include <string>
+#include <sys/types.h>
+#include <pwd.h>
 #include <tclap/CmdLine.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>

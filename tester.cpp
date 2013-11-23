@@ -10,6 +10,8 @@
 #include "Object.h"
 #include <string>
 #include <sstream>
+#include <sys/types.h>
+#include <pwd.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/lexical_cast.hpp>
@@ -38,7 +40,7 @@ class ParseObjnameTest : public ::testing::Test
 protected:
 	virtual void SetUp()
 	{
-		username = boost::lexical_cast<string>(getuid());
+		username = boost::lexical_cast<string>(getpwuid(getuid())->pw_name);
 	}
 
 	string username, objname, owner, filename;
