@@ -1,0 +1,65 @@
+Analysis
+========
+I first decompiled pretend-hw with RecStudio (see pretend-hw.c).  This exposed
+the general layout of the program:
+- main() takes the arguments
+- namecheck() verifies that the filename arguments are legitimate
+- addfile() copies the file to the submission location
+
+In addition, the decompiled code exposed a debug option not listed in the help
+string:
+        if(_t48 == 100) {
+            debug = 1;
+        }
+(ASCII 100 = 'd').  Enabling this option (e.g. via
+`/home/w4187/hw4_bin/pretend-hw -d -v dtagatac-newfile.txt`) leaked extensive
+information about the workings of the program - including the submission
+location: '/home/w4187/.fake-submit/tiecsavjepnott'.  A listing of this
+directory (`ls -l /home/w4187/.fake-submit/tiecsavjepnott`) reveals that the 'r'
+bit is erroneously set for 'others', and browsing for files owned by 'smb'
+quickly identifies his submission:
+
+dtagatac@tokyo ~/courses/security/attack $ cat /home/w4187/.fake-submit/tiecsavjepnott/smb-quote.txt
+``Airtight security, you said,'' murmured Count Vorkosigan,
+unsuccessfully suppressing a wheezing laugh. ``The most expensive yet
+devised. Proof against the cleverest viruses, the most sophisticated
+eavesdropping equipment. And two ensigns waft right through it?''
+
+
+Buffer Overflow
+===============
+On testing the filename input, I noticed that excessively long filenames were
+rejected outright. but that shorter filenames were first tested for existence.
+I continually halved the excessively long filename input until I received a
+"File not found" error, and then increased it again until I found exactly the
+longest filename that the program would check for.  I created a file with a name
+of this length, and sure enough, a segmentation fault resulted:
+
+dtagatac@tokyo ~/courses/security/attack $ /home/w4187/hw4_bin/pretend-hw -d -v dtagatac-newfile1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111.txt
+Debugging mode enabled
+Adding "dtagatac-newfile1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111.txt"
+filename check: dtagatac-newfile1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111.txt
+suffix check
+Username check, uid 14005
+Username=dtagatac
+Username check complete
+Storage directory /home/w4187/.fake-submit/tiecsavjepnott
+Opening input file /home/w4187/.fake-submit/tiecsavjepnott/
+Opening output file /home/w4187/.fake-submit/tiecsavjepnott/dtagatac-newfile1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111.txt
+0 bytes written
+ added
+*** stack smashing detected ***: /home/w4187/hw4_bin/pretend-hw terminated
+Segmentation fault (core dumped)
+
+
+Bugs
+====
+ltrace reveals that the program retrieves the environment variables 'HWBASE' and
+'HWSECRET' if they exist (for use as variables 'hwbase' and 'hwsecret',
+respectively in the source).  Some trial and error demonstrates that these
+variables determine the path to which the files are submitted.  One could
+imagine a persistence attack by someone with temporary access to some student's
+account: By setting those environment variables (e.g. in the user's .bashrc file
+all submissions can be directed to a fake folder - causing the student to fail,
+or to a folder readable by the attacker - giving the attacker access to the
+student's private data, possibly for their own submission.
