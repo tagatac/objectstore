@@ -50,7 +50,6 @@ gtest : $(gtest_version).zip
 test : cleanstore tester
 	./tester
 install : build
-	echo "Password"
 	sudo rm -vrf /var/local/objectstore
 	sudo mkdir -vp /var/local/objectstore/data
 	sudo chmod -v g-s /var/local/objectstore/data
