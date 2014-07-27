@@ -10,7 +10,7 @@ Comments on Usage
 * Other users' objects are accessed with the format:
 	<other username>+<objname>
 * ACL's consist of one or more lines of the format:
-	<username>|*.<groupname>|*\t[r][w][x][p][v]\n
+	(<username>|*).(<groupname>|*)\t[r][w][x][p][v]\n
 
 Assumptions
 ===========
